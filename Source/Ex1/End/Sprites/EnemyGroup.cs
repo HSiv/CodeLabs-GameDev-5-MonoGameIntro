@@ -25,7 +25,7 @@ namespace AlienAttackUniversal
 		private readonly Vector2 EnemyVerticalJump = new Vector2(0, 10);	// number of pixels to jump vertically after hitting edge
 		private const int EnemyStartPosition = 10;	// vertical position of grid
 		private const int ScreenEdge = 20;	// virtual edge of screen to change direction
-		private Vector2 EnemySpacing = new Vector2(4, 4);	// space between sprites
+		private Vector2 EnemySpacing = new Vector2(16, 32);	// space between sprites
 		private readonly Vector2 EnemyVelocity = new Vector2(100 / 1000.0f, 0);	// speed at which grid moves per frame
 
 		public EnemyGroup()

@@ -11,7 +11,7 @@ namespace AlienAttackUniversal
 
 		public override void Update(GameTime gameTime)
 		{
-			AnimateLoop(gameTime, 60);
+			AnimateReverse(gameTime, 60);
 		}
 	}
 }

@@ -80,14 +80,14 @@ namespace AlienAttackUniversal
 			_time += gameTime.ElapsedGameTime.TotalMilliseconds;
 			if(_time > frameTime)
 			{
-				FrameIndex += _animationDirection;
 				_time -= frameTime;
 
-				if(FrameIndex == 0 || FrameIndex > FrameCount-1)
-				{
-					_animationDirection *= -1;
-					FrameIndex += _animationDirection;
-				}
+				if(FrameIndex == 0)
+					_animationDirection = 1;
+				else if(FrameIndex == FrameCount-1)
+					_animationDirection = -1;
+
+				FrameIndex += _animationDirection;
 			}
 		}
 

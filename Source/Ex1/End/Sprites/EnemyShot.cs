@@ -13,7 +13,7 @@ namespace AlienAttackUniversal
 		public override void Update(GameTime gameTime)
 		{
 			base.Update(gameTime);
-			AnimateReverse(gameTime, 100);
+			AnimateReverse(gameTime, 60);
 		}
 	}
 }

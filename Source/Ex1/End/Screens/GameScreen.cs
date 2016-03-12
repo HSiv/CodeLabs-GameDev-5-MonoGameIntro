@@ -201,7 +201,7 @@ namespace AlienAttackUniversal.Screens
 
 			// draw the score
 			Vector2 scoreSize = _font.MeasureString("Score: " + _score);
-			_spriteBatch.DrawString(_font, "Score: " + _score, new Vector2((AlienAttackGame.ScreenWidth - scoreSize.X) / 2, 50), Color.Aqua);
+			_spriteBatch.DrawString(_font, "Score: " + _score, new Vector2((AlienAttackGame.ScreenWidth - scoreSize.X) / 2, 25), Color.Aqua);
 
 			// draw the lives icon
 			_livesIcon.Draw(gameTime, _spriteBatch);

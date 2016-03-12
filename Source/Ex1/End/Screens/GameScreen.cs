@@ -19,6 +19,7 @@ namespace AlienAttackUniversal.Screens
 		private int _score;
 		private int _lives;
 		private double _lastTime;
+		private double _backToMenuTime;
 		private bool _loseGame;
 
 		private readonly Vector2 _playerVelocity = new Vector2(400 / 1000.0f, 0);
@@ -51,19 +52,29 @@ namespace AlienAttackUniversal.Screens
 
 		public override void Update(GameTime gameTime)
 		{
-			MovePlayer(gameTime);
-			UpdatePlayerShots(gameTime);
+			if(_enemyGroup.AllDestroyed() || _loseGame)
+			{
+				_backToMenuTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+				if(_backToMenuTime >= 3000)
+				{
+					AudioManager.StopTheme();
+					AlienAttackGame.Instance.SetState(GameState.TitleScreen);
+				}
+
+				_enemyGroup.Reset();
+				_playerShots.Clear();
+			}
+			else
+			{
+				MovePlayer(gameTime);
+				UpdatePlayerShots(gameTime);
+			}
 
 			// as long as we're not in the lose state, update the enemies
 			if(!_loseGame)
 				_enemyGroup.Update(gameTime);
-			else if(InputManager.ControlState.Fire)
-			{
-				AudioManager.StopTheme();
-				AlienAttackGame.Instance.SetState(GameState.TitleScreen);
-			}
 
-			HandleCollisions(gameTime);
+			HandleCollisions(gameTime);			
 		}
 
 		private void HandleCollisions(GameTime gameTime)
@@ -178,8 +189,6 @@ namespace AlienAttackUniversal.Screens
 
 		public override void Draw(GameTime gameTime)
 		{
-			GraphicsDevice.Clear(Color.Black);
-
 			_spriteBatch.Begin();
 
 			_spriteBatch.Draw(_bgScreen, Vector2.Zero, Color.White);

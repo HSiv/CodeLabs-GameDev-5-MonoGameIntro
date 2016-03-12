@@ -7,7 +7,7 @@ namespace AlienAttackUniversal
 		public PlayerShot()
 		{
 			LoadContent(AlienAttackGame.Instance.Content, "gfx\\pshot\\pshot_{0}", 3);
-			Velocity = new Vector2(0, -200 / 1000.0f);
+			Velocity = new Vector2(0, -300 / 1000.0f);
 		}
 
 		public override void Update(GameTime gameTime)

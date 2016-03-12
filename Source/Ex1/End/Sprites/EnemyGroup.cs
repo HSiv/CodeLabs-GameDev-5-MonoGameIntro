@@ -194,6 +194,9 @@ namespace AlienAttackUniversal
 
 		private void EnemyFire(GameTime gameTime)
 		{
+			if(AllDestroyed())
+				return;
+
 			// at random times, drop an enemy shot
 			if(_random.NextDouble() > 0.99f)
 			{

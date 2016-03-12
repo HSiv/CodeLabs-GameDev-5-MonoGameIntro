@@ -27,27 +27,6 @@ namespace AlienAttackUniversal
 
 		}
 
-		public void SetFullScreen(bool fullScreen)
-		{
-			if(fullScreen)
-			{
-				// going fullscreen, use desktop resolution to minimize display mode changes
-				// this also has the nice effect of working around some displays that lie about 
-				// supporting 1280x720
-				GraphicsAdapter adapter = _graphicsDeviceManager.GraphicsDevice.Adapter;
-				_graphicsDeviceManager.PreferredBackBufferWidth = adapter.CurrentDisplayMode.Width;
-				_graphicsDeviceManager.PreferredBackBufferHeight = adapter.CurrentDisplayMode.Height;
-			}
-			else
-			{   // going windowed
-				_graphicsDeviceManager.PreferredBackBufferWidth = _screenWidth;
-				_graphicsDeviceManager.PreferredBackBufferHeight = _screenHeight;
-			}
-
-			if(fullScreen != _graphicsDeviceManager.IsFullScreen)
-				_graphicsDeviceManager.ToggleFullScreen();
-		}
-
 		public void SetRenderTarget()
 		{
 			_graphicsDeviceManager.GraphicsDevice.SetRenderTarget(_drawBuffer);
@@ -86,22 +65,6 @@ namespace AlienAttackUniversal
 			_spriteBatch.Begin();
 				_spriteBatch.Draw(_drawBuffer, dst, Color.White);
 			_spriteBatch.End();
-		}
-
-		public Vector2 ScaleInput(Vector2 input)
-		{
-			float preferredAspect = _screenWidth/(float)_screenHeight;
-
-			int presentHeight = (int)((_game.Window.ClientBounds.Width / preferredAspect) + 0.5f);
-			int barHeight = (int)MathHelper.Clamp((_game.Window.ClientBounds.Height - presentHeight) / 2.0f, 0, _screenHeight);
-
-			int presentWidth = (int)((_game.Window.ClientBounds.Height * preferredAspect) + 0.5f);
-			int barWidth = (int)MathHelper.Clamp((_game.Window.ClientBounds.Width - presentWidth) / 2.0f, 0, _screenWidth);
-
-			Vector2 scale = new Vector2((float)(_game.Window.ClientBounds.Width - (barWidth * 2)) / _screenWidth,
-										(float)(_game.Window.ClientBounds.Height - (barHeight * 2)) / _screenHeight);
-
-			return ((input - new Vector2(barWidth, barHeight)) / scale);
 		}
 	}
 }

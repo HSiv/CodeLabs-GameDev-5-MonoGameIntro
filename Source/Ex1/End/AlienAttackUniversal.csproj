@@ -22,7 +22,11 @@
     <MonoGamePlatform>WindowsStoreApp</MonoGamePlatform>
     <MonoGameContentBuilderExe>
     </MonoGameContentBuilderExe>
-    <PackageCertificateThumbprint>877610BE187840E292DC79F7CFA558545000FA79</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>1B746EAE1B884C3984963143A1445D8BA3095A62</PackageCertificateThumbprint>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+    <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+    <AppxBundle>Always</AppxBundle>
+    <AppxBundlePlatforms>x86</AppxBundlePlatforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>

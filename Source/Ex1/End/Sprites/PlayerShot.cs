@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace AlienAttackUniversal
+namespace AlienAttackUniversal.Sprites
 {
 	public class PlayerShot : Sprite
 	{

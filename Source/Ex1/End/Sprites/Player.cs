@@ -1,4 +1,4 @@
-namespace AlienAttackUniversal
+namespace AlienAttackUniversal.Sprites
 {
 	public class Player : Sprite
 	{

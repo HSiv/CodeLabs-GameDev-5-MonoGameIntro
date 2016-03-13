@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace AlienAttackUniversal
+namespace AlienAttackUniversal.Sprites
 {
 	public class Sprite
 	{
@@ -23,7 +23,7 @@ namespace AlienAttackUniversal
 		public Vector2 Position { get; set; }
 		public Vector2 Velocity { get; set; }
 		public float Rotation { get; set; }
-		public Vector2 Scale { get; set; }
+        public Vector2 Scale { get; set; } = Vector2.One;
 
 		// variable to track number of millieconds for animations
 		private double _time;

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using AlienAttackUniversal.Sprites;
 
 namespace AlienAttackUniversal.Screens
 {
@@ -22,8 +23,6 @@ namespace AlienAttackUniversal.Screens
 		private double _backToMenuTime;
 		private bool _loseGame;
 
-		private readonly Vector2 _playerVelocity = new Vector2(400 / 1000.0f, 0);
-
 		public GameScreen(Game game) : base(game)
 		{
 			_spriteBatch = new SpriteBatch(game.GraphicsDevice);
@@ -31,7 +30,8 @@ namespace AlienAttackUniversal.Screens
 			AudioManager.StartTheme();
 
 			_player = new Player();
-			_playerShots = new List<PlayerShot>();
+            _player.Position = new Vector2(AlienAttackGame.ScreenWidth / 2 - _player.Width / 2, AlienAttackGame.ScreenHeight - 120);
+            _playerShots = new List<PlayerShot>();
 			_font = game.Content.Load<SpriteFont>("font");
 
 			// draw a lives status icon in the lower left
@@ -41,7 +41,6 @@ namespace AlienAttackUniversal.Screens
 			new Explosion();
 
 			_bgScreen = game.Content.Load<Texture2D>("gfx\\bgScreen");
-			_player.Position = new Vector2(AlienAttackGame.ScreenWidth/2 - _player.Width/2, AlienAttackGame.ScreenHeight - 120);
 			_livesIcon.Position = new Vector2(20, AlienAttackGame.ScreenHeight-80);
 			_livesIcon.Scale = new Vector2(0.5f, 0.5f);
 
@@ -167,27 +166,23 @@ namespace AlienAttackUniversal.Screens
 			}
 		}
 
-		private void MovePlayer(GameTime gameTime)
-		{
-			if(_player != null)
-			{
-				if(InputManager.ControlState.FingerPosition != 0)
-					_player.Position = new Vector2(InputManager.ControlState.FingerPosition, _player.Position.Y);
-				else
-				{
-					// move left
-					if(InputManager.ControlState.Left && _player.Position.X > 0)
-						_player.Position -= _playerVelocity * gameTime.ElapsedGameTime.Milliseconds;
+        private void MovePlayer(GameTime gameTime)
+        {
+            if (_player != null)
+            {
+                _player.Velocity = Vector2.Zero;
+                // move left
+                if (InputManager.ControlState.Left && _player.Position.X > 0)
+                    _player.Velocity = new Vector2(-400 / 1000.0f, 0);
 
-					// move right
-					if(InputManager.ControlState.Right && _player.Position.X + _player.Width < AlienAttackGame.ScreenWidth)
-						_player.Position += _playerVelocity * gameTime.ElapsedGameTime.Milliseconds;
-				}
-				_player.Update(gameTime);
-			}
-		}
+                // move right
+                if (InputManager.ControlState.Right && _player.Position.X + _player.Width < AlienAttackGame.ScreenWidth)
+                    _player.Velocity = new Vector2(400 / 1000.0f, 0);
+                _player.Update(gameTime);
+            }
+        }
 
-		public override void Draw(GameTime gameTime)
+        public override void Draw(GameTime gameTime)
 		{
 			_spriteBatch.Begin();
 

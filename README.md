@@ -858,7 +858,6 @@ We already added a TitleScreen to our project which derived from DrawableGameCom
  
 You should see your spaceship in the bottom left hand corner of the screen. And if you press Left/Right arrow it should move. 
 
-
 <a name="Ex1Task18" />
 #### Task 18 - Shooting ####
 

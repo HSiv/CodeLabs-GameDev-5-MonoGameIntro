@@ -460,6 +460,92 @@ Note how we call _scaler.SetRenderTarget () first then after we draw the screen 
 <a name="Ex1Task13" />
 #### Task 13 - Handling Input ####
 
+In this task we will add input support for our game. MonoGame comes with a complete set of classes for getting input such as GamePads, Keyboard, Mouse and TouchScreens. All of these impliment a similar *state* based api. This allows you to get the current state of the input decice. Because games are generaelly not event driven we will be calling these *GetState* methods every frame. 
+
+Rather than littering our game code with lots of different input methods we will wrap them all up into on InputManager class. This will have one Update method to retrive the current input state. It will then expose this state via some static variables so we can access it throught the game code. 
+
+
+1.  Right click on the AlienAttackUniversal Project in the solution explorer and click Add->Class and add a "InputManager.cs"
+2.  Add the following using clauses to the top of the InputManager.cs class file
+	using Microsoft.Xna.Framework;
+	using Microsoft.Xna.Framework.Input;
+	using Microsoft.Xna.Framework.Input.Touch;
+3. Add the new ControlState enumeation just above the InputManager class.  This structure will be exposed as a static and will let us know which controls are active.
+	public struct ControlState
+	{
+		public bool Left;
+		public bool Right;
+		public bool Start;
+		public bool Quit;
+		public bool Fire;
+		public float FingerPosition;
+	}
+
+4. We now need to declare some internal fields to hold our control *state*. Note we store the current AND previous state for Keyboard and GamePads. This allows us to caclualate what has changed between frames.
+ 
+	private static KeyboardState _keyboardState, _lastKeyboard;
+	private static GamePadState _gamePadState, _lastGamePad;
+	private static ControlState _controlState;
+
+5. Next we need a static constructor. In this we will tell the TouchPanel class which *Gestures* we can enabled. In this case if a user taps the screen or id they drag horizontally. We will use the former to handle firing and the latter for moving the player.
+ 
+	static InputManager()
+	{
+		TouchPanel.EnabledGestures = GestureType.Tap | GestureType.HorizontalDrag;
+	}
+
+5. Its time to add the update method. This needs to be public and static so it can be called from anywhere in the game.
+	public static void Update()
+	{
+	}
+6. Before we fill in the Update method we will add the public static property for the ControlState structure we decalred earlier.
+	public static ControlState ControlState
+	{
+		get { return _controlState; }
+	}
+
+7. Now for the intersting bit. We need to retireve the current state for the all the inputs then caclulate the ControlState. First this to do is to get the Keyboard and GamePad states. Add the following code to the Update method.
+	_keyboardState = Keyboard.GetState();
+	_gamePadState = GamePad.GetState(PlayerIndex.One);
+8. Now we need to set the ControlState fields depending on the states we got. For example the following code 
+	_controlState.Quit = (_gamePadState.Buttons.Back== ButtonState.Pressed || _keyboardState.IsKeyDown(Keys.Escape));
+  sets the "Quit" field if the Gamepad "Back" buttons is pressed OR is the Escape Key is pressed on the keyboard. 
+  Add the following code to the Update method.
+
+	_controlState.Quit = (_gamePadState.Buttons.Back == ButtonState.Pressed || _keyboardState.IsKeyDown(Keys.Escape));
+        _controlState.Start = (_gamePadState.Buttons.B == ButtonState.Pressed || _keyboardState.IsKeyDown(Keys.Enter) || 		_keyboardState.IsKeyDown(Keys.Space) || _gamePadState.IsButtonDown(Buttons.Start));
+         _controlState.Left = (_gamePadState.DPad.Left == ButtonState.Pressed || _gamePadState.ThumbSticks.Left.X < -0.1f || _keyboardState.IsKeyDown(Keys.Left));
+        _controlState.Right = (_gamePadState.DPad.Right == ButtonState.Pressed || _gamePadState.ThumbSticks.Left.X > 0.1f || _keyboardState.IsKeyDown(Keys.Right));
+        _controlState.Fire = ((_gamePadState.Buttons.B == ButtonState.Pressed && _lastGamePad.Buttons.B == ButtonState.Released) || (_keyboardState.IsKeyDown(Keys.Space) && !_lastKeyboard.IsKeyDown(Keys.Space)));
+        
+9. That covers the GamePad and Keyboard. Next is the Touch Gestures. The TouchPanel class exposed s IsGestureAvailable property which tells us if a gesture was detected. It also provides a ReadGesture method to read the current gesture.  Note Gestures are queued so it is possible to get multiple gestures in on frame.. e.g a Tap and a Drag. So we need to loop through until IsGestureAvailable is false. Add the following code to the Update Method
+ 
+	while(TouchPanel.IsGestureAvailable)
+	{
+		GestureSample gs = TouchPanel.ReadGesture();
+		_controlState.Fire |= (gs.GestureType == GestureType.Tap);
+		_controlState.Start |= (gs.GestureType == GestureType.Tap);
+		if(gs.GestureType == GestureType.HorizontalDrag)
+		{
+			_controlState.Left = (gs.Delta.X < 0);
+			_controlState.Right = (gs.Delta.X > 0);
+			_controlState.FingerPosition = gs.Position.X;
+		}
+	}
+
+You shold be able to see we just loop while we have gestures, and depending on the gesture type we will set the control state. If we get a horizontal drag we will set the Left/Right control state fields depending on which direction the drag was it. We also store the current position for later.
+
+10. Finally we need to store the current state in the _last*State fields so we can detect changes in the next frame.
+	_lastGamePad = _gamePadState;
+        _lastKeyboard = _keyboardState;
+
+That covers the InputMananger. We can now use code like the following anywhere in the game to check the input.
+
+	If (InputManager.Controlstate.Quit) {
+		// quit the game
+	}
+	
+Our next task is the Audio Manager.	
 <a name="Ex1Task14" />
 #### Task 14 - Audio Manager ####
 

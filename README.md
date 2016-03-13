@@ -1052,10 +1052,97 @@ We already added a TitleScreen to our project which derived from DrawableGameCom
 
 13. Hit F5 or click the Run "Local Machine" button.
  
-You should see your spaceship in the bottom left hand corner of the screen. And if you press Left/Right arrow it should move. 
+You should see your spaceship at the bottom of the screen. And if you press Left/Right arrow it should move. 
 
 <a name="Ex1Task18" />
 #### Task 18 - Shooting ####
+
+Our next task is to get our ship to shoot. 
+
+1. Right click on the Sprites folder and click Add->Class. Call this class PlayerShot.cs 
+2. Change the PlayerShop so it derives from Sprite
+```csharp
+	class PlayerShot : Sprite
+```
+
+3. Add the following using clause
+```csharp
+	using Microsoft.Xna.Framework;
+```	
+
+4. We now need to load the textures for this spirte. So lets just add a constructor and call LoadContent in it. We also need to set the Velocity for this sprite. Note we are using an animated sprite this time, there are 3 frames availalbe pshot_0, pshot_1 and pshot_2
+```csharp
+	public PlayerShot()
+	{
+		LoadContent(AlienAttackGame.Instance.Content, "gfx\\pshot\\pshot_{0}", 3);
+		Velocity = new Vector2(0, -300 / 1000.0f);
+	}
+```		
+
+5. We also need to override the Update method. This will let use update the animation for this sprite.
+```csharp
+	public override void Update(GameTime gameTime)
+	{
+		base.Update(gameTime);
+		AnimateReverse(gameTime, 100);
+	}
+```
+6. Now go back to the GameScreen.cs. We need to add a list to hold the instances of PlayerShot. We need a list because no one likes a gun that only has one bullet :) We also need a field in which to store the last game time what we fired a bullet. This is so that there is a delay between shots. 
+```csharp
+	private readonly List<PlayerShot> _playerShots;
+	private double _lastTime;
+```
+7. In the GameScreen constructor create a new instalce of _playerShots
+```csharp
+	 _playerShots = new List<PlayerShot>();
+```
+8. Now we add a UpdatePlayerShots method. You can see in the code below that we only fire a bullet every 500 milliseconds. We also make use of the AudioManager to play the "PlayerShot" sound. This method also makes sure we update ALL the shots on the screen and remove the ones that have made it off the top of the screen.
+```csharp
+	private void UpdatePlayerShots(GameTime gameTime)
+        {
+            // if we are allowed to fire, add a shot to the list
+            if (_player != null && InputManager.ControlState.Fire && gameTime.TotalGameTime.TotalMilliseconds - _lastTime > 500)
+            {
+                // create a new shot over the ship
+                PlayerShot ps = new PlayerShot();
+                ps.Position = new Vector2((_player.Position.X + _player.Width / 2.0f) - ps.Width / 2.0f, _player.Position.Y - ps.Height);
+                _playerShots.Add(ps);
+                _lastTime = gameTime.TotalGameTime.TotalMilliseconds;
+                AudioManager.PlayCue(AudioManager.Cue.PlayerShot);
+            }
+
+            // enumerate the player shots on the screen
+            for (int i = 0; i < _playerShots.Count; i++)
+            {
+                PlayerShot playerShot = _playerShots[i];
+
+                playerShot.Update(gameTime);
+
+                // if it's off the top of the screen, remove it from the list
+                if (playerShot.Position.Y + playerShot.Height < 0)
+                    _playerShots.RemoveAt(i);
+            }
+        }
+```
+
+9. We also need to call UpdatePlayerShots in the Update method of GameScreen. Your update method should look lile the following
+```csharp
+	public override void Update(GameTime gameTime)
+        {
+            MovePlayer(gameTime);
+            UpdatePlayerShots(gameTime);
+        }
+```
+
+10. Finally we need to draw all of the shots. Add the following to the GameScreen Draw call. Remember order is important. Since the shots would normally come out from underneath the ship we shoild draw the shots first.
+```csharp
+	foreach(PlayerShot playerShot in _playerShots)
+		playerShot.Draw(gameTime, _spriteBatch);
+```
+
+11.  Hit F5 or click the Run "Local Machine" button.
+
+Start the game and by hitting Space you should fire the weapon. Now we just need something to shoot at!
 
 <a name="Ex1Task19" />
 #### Task 19 - Enemy ####

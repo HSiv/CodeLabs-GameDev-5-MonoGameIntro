@@ -616,22 +616,153 @@ Just like the InputManager the audio manager will be responsible for handling th
 This is it for the AudioManager. 
 
 <a name="Ex1Task15" />
-#### Task 15 - Game Screen ####
+#### Task 15 - Sprite ####
+
+We now have allot of the basic plumbing in place we can start looking a implementing our players and enemies for the game. We will want to have animated items or sprite because games without animation are kinda dull. Rather than duplicating a bunch of code for enemies and the player we will create a base class which will have most of that logic. There are excellent third party sprite animation systems out there which make this job allot easier. But for this Lab we'll only use what is available in MonoGame.
+
+To animate our sprites we will use a array of Texture2D's to hold the Texture for each frame. Then just increment an index to change which frame is show. Once we get to the end of the array we will rest the index back to 0 and start again. This is an extremely simple way of animating sprites.
+
+1. In the solution explorer right click on the AlienAttackUniveral project and click Add->New Folder. Name this folder Sprites.
+2. Right click on the Sprites folder and click Add->Class. Call this class Sprite.cs 
+3. Add the following using clauses
+	using Microsoft.Xna.Framework;
+	using Microsoft.Xna.Framework.Content;
+	using Microsoft.Xna.Framework.Graphics;
+4. First we'll add the properties we need. The first section will hold the information we need for holding and indexing the animations
+	// all textures in animation set
+	protected Texture2D[] Frames { get; set; }
+	// current frame to draw
+	protected int FrameIndex { get; set; }
+	// total number of frames
+	protected int FrameCount { get; set; }
+5. Next we'll add some code which defines the position, size, velocity and Scale of the sprite. 
+		// size of sprite
+		public Vector2 Size { get { return new Vector2(Width, Height); } }
+		public int Width { get; set; }
+		public int Height { get; set; }
+
+		public Vector2 Position { get; set; }
+		public Vector2 Velocity { get; set; }
+		public float Rotation { get; set; }
+		public Vector2 Scale { get; set; }
+
+6. Now we add a few additonal fields for keeping track of the elasped time for animating and the bounding box for handling collisions. The _animationDirection field will be used to left us reverse the direction of the animation.
+	// variable to track number of millieconds for animations
+	private double _time;
+	// bounding box of sprite...used for collisions
+	private Rectangle _boundingBox;
+	private int _animationDirection = 1;
+7. We need a constructor to set the initial value for the Scale
+ 	public Sprite()
+	{
+		Scale = Vector2.One;
+	}
+8. We need to be able to load textures for our sprite. Our animated graphics are stored on disk in the format	
+ 		<name>_<frmae>
+   So we need two LoadContent methods. One to load load a normal non animated sprite and one which will load a group of textures into the array.
+	public virtual void LoadContent(ContentManager contentManager, string name)
+	{
+		// load single frame
+		Frames = new Texture2D[1];
+		Frames[0] = contentManager.Load<Texture2D>(name);
+		Width = Frames[0].Width;
+		Height = Frames[0].Height;
+	}
+
+	public virtual void LoadContent(ContentManager contentManager, string name, int count)
+	{
+		// load multiple frames
+		Frames = new Texture2D[count];
+		for(int i = 0; i < count; i++)
+			Frames[i] = contentManager.Load<Texture2D>(string.Format(name, i));
+		FrameCount = count;
+		Width = Frames[0].Width;
+		Height = Frames[0].Height;
+	}
+
+9. Next is a couple of methods we will use to animate the sprite. These will be called as part of the Update method and will take a GameTime so we can accurately track how much time has passed. It will also take a value defining how long a *frame* should last before switching to the next one.
+
+	public virtual void AnimateLoop(GameTime gameTime, double frameTime)
+	{
+		// count number of milliseconds
+		_time += gameTime.ElapsedGameTime.TotalMilliseconds;
+		// if we're over the time for the next frame, move on
+		if(_time > frameTime)
+		{
+			FrameIndex++;
+			_time -= frameTime;
+		}
+		// if we're past the # of frames, start back at 0
+		if(FrameIndex > FrameCount-1)
+			FrameIndex = 0;
+	}
+
+	public virtual void AnimateReverse(GameTime gameTime, double frameTime)
+	{
+		// same as above, but reverse direction instead of starting back at 0
+		_time += gameTime.ElapsedGameTime.TotalMilliseconds;
+		if(_time > frameTime)
+		{
+			_time -= frameTime;
+			if(FrameIndex == 0)
+				_animationDirection = 1;
+			else if(FrameIndex == FrameCount-1)
+				_animationDirection = -1;
+			FrameIndex += _animationDirection;
+		}
+	}
+
+10. Next up is the Update method. Again this will take a GameTime so we can move the player depending on how much time has elapsed since the last frame. If we just incrememted the position by Velocity each frame then the game would run faster on a faster PC than it does on a slower one. This is becaue the faster PC will be calling Update/Draw more often. This is one of the most important things to remember when writing games. You frame rate is not always going to be the same on everymachine.
+
+	public virtual void Update(GameTime gameTime)
+	{
+		// move the sprite 1 velocity unit
+		Position += Velocity * gameTime.ElapsedGameTime.Milliseconds;
+	}
+
+11. The draw method is really simple. We just use a passed in spritebatch to draw the current frame. If we don't have any frames we just exit out of the method.
+	
+	public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+	{
+		if(Frames == null)
+			return;
+		spriteBatch.Draw(Frames[FrameIndex], position:Position, color:Color.White, scale:Scale);
+	}
+
+12. Finally we need to expose the BoundingBox. Remembering that as the sprite moves location on the screen its bounding box location will change.
+	
+	public virtual Rectangle BoundingBox
+	{
+		get 
+		{
+			// only need to assign this once
+			if(_boundingBox == Rectangle.Empty)
+			{
+				_boundingBox.Width = Width;
+				_boundingBox.Height = Height;
+			}
+			_boundingBox.X = (int)Position.X;
+			_boundingBox.Y = (int)Position.Y;
+				return _boundingBox;
+		}
+	}
+
+That is our sprite base class complete. We can now start adding our Player.
 
 <a name="Ex1Task16" />
-#### Task 16 - Sprite ####
+#### Task 16 - Adding the Player ####
 
 <a name="Ex1Task17" />
-#### Task 17 - Adding the Player ####
+#### Task 17 - Enemy ####
 
 <a name="Ex1Task18" />
-#### Task 18 - Enemy ####
+#### Task 18 - Shooting ####
 
 <a name="Ex1Task19" />
-#### Task 19 - Shooting ####
+#### Task 19 - Enemy Group ####
 
 <a name="Ex1Task20" />
-#### Task 20 - Enemy Group ####
+#### Task 20 - Game Screen ####
 
 <a name="Ex1Task21" />
 #### Task 21 - The Explosive Finale ####

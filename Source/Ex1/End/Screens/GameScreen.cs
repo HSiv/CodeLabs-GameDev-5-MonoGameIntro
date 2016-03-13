@@ -187,11 +187,7 @@ namespace AlienAttackUniversal.Screens
 			_spriteBatch.Begin();
 
 			_spriteBatch.Draw(_bgScreen, Vector2.Zero, Color.White);
-
-			// draw the player
-			if(_player != null)
-				_player.Draw(gameTime, _spriteBatch);
-
+			
 			// draw the enemy board
 			_enemyGroup.Draw(gameTime, _spriteBatch);
 
@@ -199,8 +195,12 @@ namespace AlienAttackUniversal.Screens
 			foreach(PlayerShot playerShot in _playerShots)
 				playerShot.Draw(gameTime, _spriteBatch);
 
-			// draw the explosion
-			if(_playerExplosion != null)
+            // draw the player
+            if (_player != null)
+                _player.Draw(gameTime, _spriteBatch);
+
+            // draw the explosion
+            if (_playerExplosion != null)
 				_playerExplosion.Draw(gameTime, _spriteBatch);
 
 			// draw the score

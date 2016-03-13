@@ -752,17 +752,121 @@ That is our sprite base class complete. We can now start adding our Player.
 <a name="Ex1Task16" />
 #### Task 16 - Adding the Player ####
 
+Because we now have a base class for our sprites adding new sprites is going to be very straighforward.
+
+1. Right click on the Sprites folder and click Add->Class. Call this class Player.cs 
+2. Change the Player so it derives from Sprite
+	class Player : Sprite	
+	{
+	}
+
+3. We now need to load the textures for this spirte. So lets just add a constructor and call LoadContent in it.
+	public Player()
+	{
+		LoadContent(AlienAttackGame.Instance.Content,  "gfx\\player\\player");
+	}
+
+That is it! All the other logic is handled in the Sprite class. 
+
 <a name="Ex1Task17" />
-#### Task 17 - Enemy ####
+#### Task 17 - Game Screen ####
+
+We already added a TitleScreen to our project which derived from DrawableGameComponent. We need to do the same for the GameScreen
+
+1. Right click on the Screens folder and click Add->Class. Call this class GameScreen.cs
+3. Add the following using clauses to the top of the TitleScreen.cs . These will import the required MonoGame namespaces
+	using System.Collections.Generic;
+	using Microsoft.Xna.Framework;
+	using Microsoft.Xna.Framework.Graphics;
+4. Change the GameScreen class so it derives from DrawableGameComponent.
+	class GameScreen : DrawableGameComponent
+
+5. Add the following fields. We need a SpriteBatch to draw our graphics and field to hold our Player sprite.
+
+	private Player _player;
+        private readonly SpriteBatch _spriteBatch;
+
+6. Add a constructor for the GameScreen like we did with the TitleScreen. Remember it needs the game class as a paremeter. In the constructor we willl create the spriteBatch, the player and start playing the music with the AudioManager.
+	public GameScreen(Game game) : base(game)
+        {
+        	_spriteBatch = new SpriteBatch(game.GraphicsDevice);
+        	AudioManager.StartTheme();
+        	_player = new Player();
+		_player.Position = new Vector2(AlienAttackGame.ScreenWidth / 2 - _player.Width / 2, AlienAttackGame.ScreenHeight - 120);
+        }
+
+7. Next Up is a method to move the player.  We will call this from the GameScreen Update method. We will set our default player velocity to zero so we don't move.. Then if we get any input we will change the Velocty so the player goes in the direction we want. We then call _player.Update to apply the Position += Velocity logic we added to the Sprite class.
+ 
+	private void MovePlayer(GameTime gameTime)
+        {
+            if (_player != null)
+            {
+                _player.Velocity = Vector2.Zero;
+                // move left
+                if (InputManager.ControlState.Left && _player.Position.X > 0)
+                    _player.Velocity = new Vector2(-400 / 1000.0f, 0);
+                // move right
+                if (InputManager.ControlState.Right && _player.Position.X + _player.Width < AlienAttackGame.ScreenWidth)
+                    _player.Velocity = new Vector2(400 / 1000.0f, 0);
+                _player.Update(gameTime);
+            }
+        }
+        
+8. Now add the Update method override which will call MovePlayer
+	public override void Update(GameTime gameTime)
+        {
+            MovePlayer(gameTime);
+        }
+
+9. Now Add our Draw method 
+	public override void Draw(GameTime gameTime)
+        {
+            _spriteBatch.Begin();
+            // draw the player
+            if (_player != null)
+                _player.Draw(gameTime, _spriteBatch);
+            _spriteBatch.End();
+        }
+
+10. If you ran the game now you would still be stuck on the title screen. We need to hook up the GameState changes. Open AlienAttackUniversal.cs and find the Update method then add above the call to _screen.Update.
+	InputManager.Update();
+        
+11. Go to the SetState method and change it so that we create the GameScreen
+ 
+	public void SetState(GameState newState)
+        {
+            switch (newState)
+            {
+                case GameState.TitleScreen:
+                    _screen = new TitleScreen(this);
+                    break;
+                case GameState.GameScreen:
+                    _screen = new GameScreen(this);
+                    break;
+            }
+        }
+
+12. Finally Open up the TitleScreen and add the following Update override method. This will check for input and then call the SetState method.
+ 
+	public override void Update(GameTime gameTime)
+	{
+		if(InputManager.ControlState.Start)
+			AlienAttackGame.Instance.SetState(GameState.GameScreen);
+	}
+
+13. Hit F5 or click the Run "Local Machine" button.
+ 
+You should see your spaceship in the bottom left hand corner of the screen. And if you press Left/Right arrow it should move. 
+
 
 <a name="Ex1Task18" />
 #### Task 18 - Shooting ####
 
 <a name="Ex1Task19" />
-#### Task 19 - Enemy Group ####
+#### Task 19 - Enemy ####
 
 <a name="Ex1Task20" />
-#### Task 20 - Game Screen ####
+#### Task 20 - Enemy Group ####
 
 <a name="Ex1Task21" />
 #### Task 21 - The Explosive Finale ####

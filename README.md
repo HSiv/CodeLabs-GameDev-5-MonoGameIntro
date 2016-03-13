@@ -465,7 +465,10 @@ In this task we will add input support for our game. MonoGame comes with a compl
 Rather than littering our game code with lots of different input methods we will wrap them all up into on InputManager class. This will have one Update method to retrive the current input state. It will then expose this state via some static variables so we can access it throught the game code. 
 
 
-1.  Right click on the AlienAttackUniversal Project in the solution explorer and click Add->Class and add a "InputManager.cs"
+1.  Right click on the AlienAttackUniversal Project in the solution explorer and click Add->Class and add a "InputManager.cs". Then change the InputManager class to be static.
+	static class InputManager
+	{
+	}
 2.  Add the following using clauses to the top of the InputManager.cs class file
 	using Microsoft.Xna.Framework;
 	using Microsoft.Xna.Framework.Input;
@@ -545,9 +548,72 @@ That covers the InputMananger. We can now use code like the following anywhere i
 		// quit the game
 	}
 	
-Our next task is the Audio Manager.	
+Our next task is the Audio Manager.
+
 <a name="Ex1Task14" />
 #### Task 14 - Audio Manager ####
+
+Just like the InputManager the audio manager will be responsible for handling the loading and playing of all audio in the game. 
+
+1.  Right click on the AlienAttackUniversal Project in the solution explorer and click Add->Class and add a "AudioManager.cs". Then change the AudioManager class to be static.
+	static class AudioManager
+	{
+	}
+2.  Add the following using clauses to the top of the AudioManager.cs file
+ 	using Microsoft.Xna.Framework.Audio;
+	using Microsoft.Xna.Framework.Media;
+3. Add the following Cue enumeration to the AudioManager class. This will let us tell the Manager which sound effect we want to play
+	public enum Cue
+	{
+		EnemyShot,
+		PlayerShot,
+		Explosion
+	};
+4. Now we need to add the fields which we will store the sounds in. We will use Song for the music and SoundEffect for each of the game sounds we want to play. 
+	private static readonly Song _theme;
+        private static readonly SoundEffect _enemyShot;
+        private static readonly SoundEffect _playerShot;
+        private static readonly SoundEffect _explosion;
+
+5. Next we will add a static constructor to load all the audio from the ContentManger. We'll use the Instance field of the Game to get access to the game instance then call the Content.Load methods for each sound.
+	static AudioManager()
+	{
+		_theme = AlienAttackGame.Instance.Content.Load<Song>("sfx\\theme");           
+		_enemyShot = AlienAttackGame.Instance.Content.Load<SoundEffect>("sfx\\enemyShot");
+		_playerShot = AlienAttackGame.Instance.Content.Load<SoundEffect>("sfx\\playerShot");
+		_explosion = AlienAttackGame.Instance.Content.Load<SoundEffect>("sfx\\explosion");
+	}
+
+6. We now need a way to play the sounds. This is where the Cue enumeration comes in. We'll add a new method "PlayCue" which will take the Cue enum as a parameter. We can then use the swtich statement to play the correct sound.
+	public static void PlayCue(Cue cue)
+	{
+		// play the effect requested
+		switch(cue)
+		{
+			case Cue.EnemyShot:
+				_enemyShot.Play();
+				break;
+			case Cue.PlayerShot:
+				_playerShot.Play();
+				break;
+			case Cue.Explosion:
+				_explosion.Play();
+				break;
+		}
+	}
+
+7. Finally we need a couple of methods to start and stop the theme music. 
+	public static void StartTheme()
+        {
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Play(_theme);
+        }
+        public static void StopTheme()
+        {
+            MediaPlayer.Stop();
+        }
+
+This is it for the AudioManager. 
 
 <a name="Ex1Task15" />
 #### Task 15 - Game Screen ####

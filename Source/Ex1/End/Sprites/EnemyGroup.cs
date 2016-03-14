@@ -121,7 +121,13 @@ namespace AlienAttackUniversal.Sprites
 			return null;
 		}
 
-		private void MoveEnemies(GameTime gameTime)
+        public bool AllDestroyed()
+        {
+            // we won if we can't find any enemies at all
+            return (FindLeftMostEnemy() == null);
+        }
+
+        private void MoveEnemies(GameTime gameTime)
 		{
 			Enemy enemy = FindRightMostEnemy();
 
@@ -165,13 +171,51 @@ namespace AlienAttackUniversal.Sprites
 			}
 		}
 
-		public bool AllDestroyed()
-		{
-			// we won if we can't find any enemies at all
-			return (FindLeftMostEnemy() == null);
-		}
+        private void EnemyFire(GameTime gameTime)
+        {
+            if (AllDestroyed())
+                return;
 
-		public bool HandlePlayerShotCollision(PlayerShot playerShot)
+            // at random times, drop an enemy shot
+            if (_random.NextDouble() > 0.99f)
+            {
+                int x, y;
+
+                // find an enemy that hasn't been destroyed
+                do
+                {
+                    x = (int)(_random.NextDouble() * EnemyCols);
+                    y = (int)(_random.NextDouble() * EnemyRows);
+                }
+                while (_enemies[y, x] == null);
+
+                // create a shot for that enemy and add it to the list
+                EnemyShot enemyShot = new EnemyShot();
+                enemyShot.Position = _enemies[y, x].Position;
+                enemyShot.Position += new Vector2(0, _enemies[y, x].Height);
+                _enemyShots.Add(enemyShot);
+
+                AudioManager.PlayCue(AudioManager.Cue.EnemyShot);
+            }
+
+            for (int i = 0; i < _enemyShots.Count; i++)
+            {
+                // update all shots
+                _enemyShots[i].Update(gameTime);
+
+                // remove those that are off the screen
+                if (_enemyShots[i].Position.Y > AlienAttackGame.ScreenHeight)
+                    _enemyShots.RemoveAt(i);
+            }
+        }
+
+        public bool CheckCollision(Sprite s1, Sprite s2)
+        {
+            // simple bounding box collision detection
+            return s1.BoundingBox.Intersects(s2.BoundingBox);
+        }
+
+        public bool HandlePlayerShotCollision(PlayerShot playerShot)
 		{
 			for(int y = 0; y < EnemyRows; y++)
 			{
@@ -190,45 +234,7 @@ namespace AlienAttackUniversal.Sprites
 				}
 			}
 			return false;
-		}
-
-		private void EnemyFire(GameTime gameTime)
-		{
-			if(AllDestroyed())
-				return;
-
-			// at random times, drop an enemy shot
-			if(_random.NextDouble() > 0.99f)
-			{
-				int x, y;
-
-				// find an enemy that hasn't been destroyed
-				do
-				{
-					x = (int)(_random.NextDouble() * EnemyCols);
-					y = (int)(_random.NextDouble() * EnemyRows);
-				}
-				while(_enemies[y,x] == null);
-
-				// create a shot for that enemy and add it to the list
-				EnemyShot enemyShot = new EnemyShot();
-				enemyShot.Position = _enemies[y,x].Position;
-				enemyShot.Position += new Vector2(0, _enemies[y,x].Height);
-				_enemyShots.Add(enemyShot);
-
-				AudioManager.PlayCue(AudioManager.Cue.EnemyShot);
-			}
-
-			for(int i = 0; i < _enemyShots.Count; i++)
-			{
-				// update all shots
-				_enemyShots[i].Update(gameTime);
-
-				// remove those that are off the screen
-				if(_enemyShots[i].Position.Y > AlienAttackGame.ScreenHeight)
-					_enemyShots.RemoveAt(i);
-			}
-		}
+		}		
 
 		public bool HandleEnemyShotCollision(Player player)
 		{
@@ -263,12 +269,6 @@ namespace AlienAttackUniversal.Sprites
 				}
 			}
 			return false;
-		}
-
-		public bool CheckCollision(Sprite s1, Sprite s2)
-		{
-			// simple bounding box collision detection
-			return s1.BoundingBox.Intersects(s2.BoundingBox);
-		}
+		}		
 	}
 }

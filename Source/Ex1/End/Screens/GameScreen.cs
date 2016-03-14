@@ -7,19 +7,18 @@ namespace AlienAttackUniversal.Screens
 {
 	public class GameScreen : DrawableGameComponent
 	{
-		private Player _player;
-		private readonly Player _livesIcon;
+        private Player _player;
+        private readonly List<PlayerShot> _playerShots;
+        private double _lastTime;
+        private readonly SpriteBatch _spriteBatch;
+        private readonly Player _livesIcon;
 		private Explosion _playerExplosion;
 		private readonly Texture2D _bgScreen;
 		private readonly EnemyGroup _enemyGroup;
 		private readonly SpriteFont _font;
-		private readonly SpriteBatch _spriteBatch;
-
-		private readonly List<PlayerShot> _playerShots;
-
+				
 		private int _score;
 		private int _lives;
-		private double _lastTime;
 		private double _backToMenuTime;
 		private bool _loseGame;
 
@@ -32,6 +31,7 @@ namespace AlienAttackUniversal.Screens
 			_player = new Player();
             _player.Position = new Vector2(AlienAttackGame.ScreenWidth / 2 - _player.Width / 2, AlienAttackGame.ScreenHeight - 120);
             _playerShots = new List<PlayerShot>();
+
 			_font = game.Content.Load<SpriteFont>("font");
 
 			// draw a lives status icon in the lower left

@@ -1714,7 +1714,13 @@ Our final task is to update the GameScreen to use all of these new Enemy Classes
 <a name="Summary" />
 ## Summary ##
 
-By completing this module you should have:
+The MonoGame framework does not force you to do things in a particular way. As a result there are many different ways to write a game. This module should have given you an grasp of 
+
+1. Processing and Loading Content
+2. Drawing Textures
+3. Drawing Text
+4. Playing Sound and Music.
+5. Structuring you code so you can reuse functionality.
 
 - Foo
 

@@ -1060,7 +1060,7 @@ You should see your spaceship at the bottom of the screen. And if you press Left
 Our next task is to get our ship to shoot. 
 
 1. Right click on the Sprites folder and click Add->Class. Call this class PlayerShot.cs 
-2. Change the PlayerShop so it derives from Sprite
+2. Change the PlayerShot so it derives from Sprite
 ```csharp
 	class PlayerShot : Sprite
 ```
@@ -1146,6 +1146,36 @@ Start the game and by hitting Space you should fire the weapon. Now we just need
 
 <a name="Ex1Task19" />
 #### Task 19 - Enemy ####
+
+1. Right click on the Sprites folder and click Add->Class. Call this class Enemy.cs 
+2. Add the following using clause
+```csharp
+	using Microsoft.Xna.Framework;
+```
+3. Change the Enemy so it derives from Sprite
+```csharp
+	class Enemy : Sprite	
+	{
+	}
+```
+
+4. We now need to load the textures for this spirte. So lets just add a constructor and call LoadContent in it.
+```csharp
+	public Enemy()
+	{
+		LoadContent(AlienAttackGame.Instance.Content, "gfx\\enemy1\\enemy1_{0}", 10);
+	}
+```
+
+5. Because our Enemy is animated we need to call the AnimateReverse method in the Update
+```csharp
+	public override void Update(GameTime gameTime)
+        {
+            AnimateReverse(gameTime, 60);
+        }
+```        
+
+That is it! 
 
 <a name="Ex1Task20" />
 #### Task 20 - Enemy Group ####

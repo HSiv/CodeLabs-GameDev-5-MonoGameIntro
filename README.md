@@ -1444,7 +1444,7 @@ We want to display the enemies in a grouping. To do this we will need to create 
             return s1.BoundingBox.Intersects(s2.BoundingBox);
         }
 ```
-12. The final blocks of code handle collision. The logic is similar for each function. Loop through the items , check for a Collision and if there is create an explosion.
+12. The next few blocks of code handle collision. The logic is similar for each function. Loop through the items , check for a Collision and if there is create an explosion.
 ```csharp
 	public bool HandlePlayerShotCollision(PlayerShot playerShot)
 	{
@@ -1502,9 +1502,214 @@ We want to display the enemies in a grouping. To do this we will need to create 
 		return false;
 	}
 ```
+13. We now need to add the Update method overide to call our MoveEnemies and EmemyFire methods. We also need to update any explosions we have. Remember that if the Explosion Update method returned true, it was becaus it had finished. In which case we need to remove it from the list. 
+```csharp
+	public override void Update(GameTime gameTime)
+	{
+		base.Update(gameTime);
+
+		MoveEnemies(gameTime);
+		EnemyFire(gameTime);
+
+		for(int i = 0; i < _explosions.Count; i++)
+		{
+			// update all explosions, remove those whose animations are over
+			if(_explosions[i].Update(gameTime))
+				_explosions.RemoveAt(i);
+		}
+	}
+```
+14. Finally we need to draw our Enemies. Add the following Draw method. We just loop through the enemies, shots and explosions and draw them all. 
+```csharp
+	public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+	{
+		// draw all active enemies
+		foreach(Enemy enemy in _enemies)
+		{
+			if(enemy != null)
+				enemy.Draw(gameTime, spriteBatch);
+		}
+
+		// draw all enemy shots
+		foreach(EnemyShot enemyShot in _enemyShots)
+			enemyShot.Draw(gameTime, spriteBatch);
+
+		// draw all explosions
+		foreach(Explosion explosion in _explosions)
+			explosion.Draw(gameTime, spriteBatch);
+	}
+```
 
 <a name="Ex1Task22" />
 #### Task 22 - The Explosive Finale ####
+
+Our final task is to update the GameScreen to use all of these new Enemy Classes and make this into a game. 
+
+1. Open the GameScreen.cs class and add the following field definitions. Note we have an EnemyGroup field.
+```csharp
+ 	private readonly Player _livesIcon;
+	private Explosion _playerExplosion;
+	private readonly Texture2D _bgScreen;
+	private readonly EnemyGroup _enemyGroup;
+	private readonly SpriteFont _font;
+				
+	private int _score;
+	private int _lives;
+	private double _backToMenuTime;
+	private bool _loseGame;
+```
+2. We now need to update the constructor to initialise this new fields. Add the following code after the current code in the constructor
+```csharp
+	_font = game.Content.Load<SpriteFont>("font");
+	// draw a lives status icon in the lower left
+	_livesIcon = new Player();
+	// cache explosion
+	new Explosion();
+	_bgScreen = game.Content.Load<Texture2D>("gfx\\bgScreen");
+	_livesIcon.Position = new Vector2(20, AlienAttackGame.ScreenHeight-80);
+	_livesIcon.Scale = new Vector2(0.5f, 0.5f);
+	_enemyGroup = new EnemyGroup();
+	_lives = 2;
+```
+3. Next we need to add a method to handle all of the collision detection. This will call into the _enemyGroup collision methods we added earlier.
+```csharp
+	private void HandleCollisions(GameTime gameTime)
+	{
+		// see if a player shot hit an enemy
+		for(int i = 0; i < _playerShots.Count; i++)
+		{
+			PlayerShot playerShot = _playerShots[i];
+			// check the shot and see if it it collided with an enemy
+			if(playerShot != null && _enemyGroup.HandlePlayerShotCollision(_playerShots[i]))
+			{
+				// remove the shot, add the score
+				_playerShots.RemoveAt(i);
+				_score += 100;
+				AudioManager.PlayCue(AudioManager.Cue.Explosion);
+			}
+		}
+		// see if an enemy shot hit the player
+		if(_player != null && _enemyGroup.HandleEnemyShotCollision(_player))
+		{
+			// blow up the player
+			_playerExplosion = new Explosion();
+			Vector2 center = _player.Position + (_player.Size/2.0f);
+			_playerExplosion.Position = center - (_playerExplosion.Size/2.0f);
+			_player = null;
+			AudioManager.PlayCue(AudioManager.Cue.Explosion);
+		}
+		// see if an enemy hit the player directly
+		if(_player != null && _enemyGroup.HandleEnemyPlayerCollision(_player))
+		{
+			// blow up the player
+			_playerExplosion = new Explosion();
+			Vector2 center = _player.Position + (_player.Size/2.0f);
+			_playerExplosion.Position = center - (_playerExplosion.Size/2.0f);
+			_player = null;
+			AudioManager.PlayCue(AudioManager.Cue.Explosion);
+			_loseGame = true;
+		}
+		// if the player explosion animation is running, update it
+		if(_playerExplosion != null)
+		{
+			// if this is the last frame
+			if(_playerExplosion.Update(gameTime) && !_loseGame)
+			{
+				// remove it
+				_playerExplosion = null;
+
+				// we lose if we have no lives left
+				if(_lives == 0)
+					_loseGame = true;
+				else
+				{
+					// subract 1 life and reset the board
+					_lives--;
+					_enemyGroup.Reset();
+					_playerShots.Clear();
+					_player = new Player();
+					_player.Position = new Vector2(AlienAttackGame.ScreenWidth/2 - _player.Width/2, AlienAttackGame.ScreenHeight - 100);
+				}
+			}
+		}
+	}
+```
+4. With all this new code we need to update the Update method. Currently is just updates the player. We now need it to Update the enemyGroup and call HandleCollisions as well as check for the game over condition. Replace the entire Update method in GameScreen with the following
+```csharp
+	public override void Update(GameTime gameTime)
+	{
+		if(_enemyGroup.AllDestroyed() || _loseGame)
+		{
+			_backToMenuTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+			if(_backToMenuTime >= 3000)
+			{
+				AudioManager.StopTheme();
+				AlienAttackGame.Instance.SetState(GameState.TitleScreen);
+			}
+
+			_enemyGroup.Reset();
+			_playerShots.Clear();
+		}
+		else
+		{
+			MovePlayer(gameTime);
+			UpdatePlayerShots(gameTime);
+		}
+
+		// as long as we're not in the lose state, update the enemies
+		if(!_loseGame)
+			_enemyGroup.Update(gameTime);
+
+		HandleCollisions(gameTime);			
+	}
+```
+5. Our final update is to the draw method. We now need to change it to Draw not only the player, but the EnemyGroup. We also draw the Scrore, Game over Text and the player lives. If you take a look through the code it should be fairly easy to follow. Replace the entire Draw method in GameScreen with the following.
+```csharp
+	public override void Draw(GameTime gameTime)
+	{
+		_spriteBatch.Begin();
+
+		_spriteBatch.Draw(_bgScreen, Vector2.Zero, Color.White);
+		
+		// draw the enemy board
+		_enemyGroup.Draw(gameTime, _spriteBatch);
+
+		// draw the player shots
+		foreach(PlayerShot playerShot in _playerShots)
+			playerShot.Draw(gameTime, _spriteBatch);
+
+    // draw the player
+    if (_player != null)
+        _player.Draw(gameTime, _spriteBatch);
+
+    // draw the explosion
+    if (_playerExplosion != null)
+			_playerExplosion.Draw(gameTime, _spriteBatch);
+
+		// draw the score
+		Vector2 scoreSize = _font.MeasureString("Score: " + _score);
+		_spriteBatch.DrawString(_font, "Score: " + _score, new Vector2((AlienAttackGame.ScreenWidth - scoreSize.X) / 2, 25), Color.Aqua);
+
+		// draw the lives icon
+		_livesIcon.Draw(gameTime, _spriteBatch);
+		_spriteBatch.DrawString(_font, "x" + _lives, new Vector2(_livesIcon.Position.X + (_livesIcon.Width*_livesIcon.Scale.X) + 8, _livesIcon.Position.Y), Color.White);
+
+		// draw the proper text, if required
+		if(_enemyGroup.AllDestroyed())
+		{
+			Vector2 size = _font.MeasureString("You win!");
+			_spriteBatch.DrawString(_font, "You win!", new Vector2((AlienAttackGame.ScreenWidth - size.X) / 2, (AlienAttackGame.ScreenHeight - size.Y) / 2), Color.Green);
+		}
+
+		if(_loseGame)
+		{
+			Vector2 size = _font.MeasureString("Game Over");
+			_spriteBatch.DrawString(_font, "Game Over", new Vector2((AlienAttackGame.ScreenWidth - size.X) / 2, (AlienAttackGame.ScreenHeight - size.Y) / 2), Color.Red);
+		}
+
+		_spriteBatch.End();
+	}
+```
 
 <a name="Summary" />
 ## Summary ##

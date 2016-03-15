@@ -153,10 +153,12 @@ Just follow the //TODO items.
 ```csharp
 	MovePlayer(gameTime);
 ```
-7. Go to Ext1Task4 - Step 4 and uncomment the code.
+7. Go to Ext1Task4 - Step 7 and uncomment the code.
 ```csharp
 	// draw the player
         if (_player != null)
         	_player.Draw(gameTime, _spriteBatch);
 ```
 8. Hit F5 or click the Run "Local Machine" button.
+
+You should now see our space ship at the bottom of the screen. If you press the Left/Right keys you will be able to move the ship.

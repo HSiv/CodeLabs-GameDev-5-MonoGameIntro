@@ -132,33 +132,114 @@ Just follow the //TODO items.
 ```csharp
 	 private readonly Player _livesIcon;
 ```
-3. Go to Ext1Task4 - Step 3 and uncomment the code.
+4. Go to Ext1Task4 - Step 3 and uncomment the code.
 ```csharp
 	_player = new Player();
         _player.Position = new Vector2(AlienAttackGame.ScreenWidth / 2 - _player.Width / 2, AlienAttackGame.ScreenHeight - 120);
 ```
-4. Go to Ext1Task4 - Step 4 and uncomment the code.
+5. Go to Ext1Task4 - Step 4 and uncomment the code.
 ```csharp
 	_livesIcon = new Player();
         _livesIcon.Position = new Vector2(20, AlienAttackGame.ScreenHeight - 80);
         _livesIcon.Scale = new Vector2(0.5f, 0.5f);
 ```
-5. Go to Ext1Task4 - Step 5 and uncomment the code. This is the entire MovePlayer method. In this method we make use of the InputManager.ControlState to decide if we need to move the player left or right. Depending on the result we alter the velocity which will then be used in the Sprite.Update method to move the player.
+6. Go to Ext1Task4 - Step 5 and uncomment the code. This is the entire MovePlayer method. In this method we make use of the InputManager.ControlState to decide if we need to move the player left or right. Depending on the result we alter the velocity which will then be used in the Sprite.Update method to move the player.
 ```csharp
 	_livesIcon = new Player();
         _livesIcon.Position = new Vector2(20, AlienAttackGame.ScreenHeight - 80);
         _livesIcon.Scale = new Vector2(0.5f, 0.5f);
 ```
-6. Go to Ext1Task4 - Step 6 and uncomment the code. Note how we always pass gameTime into the methods dealing with Updat and Draw. This is so we can update things based on the amount of time that has elasped between frames.
+7. Go to Ext1Task4 - Step 6 and uncomment the code. Note how we always pass gameTime into the methods dealing with Updat and Draw. This is so we can update things based on the amount of time that has elasped between frames.
 ```csharp
 	MovePlayer(gameTime);
 ```
-7. Go to Ext1Task4 - Step 7 and uncomment the code.
+8. Go to Ext1Task4 - Step 7 and uncomment the code.
 ```csharp
 	// draw the player
         if (_player != null)
         	_player.Draw(gameTime, _spriteBatch);
 ```
-8. Hit F5 or click the Run "Local Machine" button.
+9. Hit F5 or click the Run "Local Machine" button.
 
 You should now see our space ship at the bottom of the screen. If you press the Left/Right keys you will be able to move the ship.
+
+<a name="Ex1Task5" />
+#### Task 5 - Add the PlayerShot ####
+
+Our next task is to get our ship to shoot. 
+
+1. Right click on the Sprites folder and click Add->Class. Call this class PlayerShot.cs 
+2. Change the PlayerShot so it derives from Sprite
+```csharp
+	class PlayerShot : Sprite
+```
+
+3. Add the following using clause
+```csharp
+	using Microsoft.Xna.Framework;
+```	
+
+4. We now need to load the textures for this spirte. So lets just add a constructor and call LoadContent in it. We also need to set the Velocity for this sprite. Note we are using an animated sprite this time, there are 3 frames availalbe pshot_0, pshot_1 and pshot_2
+```csharp
+	public PlayerShot()
+	{
+		LoadContent(AlienAttackGame.Instance.Content, "gfx\\pshot\\pshot_{0}", 3);
+		Velocity = new Vector2(0, -300 / 1000.0f);
+	}
+```		
+
+5. We also need to override the Update method. This will let use update the animation for this sprite.
+```csharp
+	public override void Update(GameTime gameTime)
+	{
+		base.Update(gameTime);
+		AnimateReverse(gameTime, 100);
+	}
+```
+
+
+<a name="Ex1Task6" />
+#### Task 6 - Shooting ####
+
+
+1. Open the Task List in Visual Studio 2015. View->TaskList
+2. Look for Ex1Task6 - Step 1 Double click on it and then uncomment the code 
+```csharp
+	private readonly List<PlayerShot> _playerShots;
+```
+3. Look for Ex1Task6 - Step 2 Double click on it and then uncomment the code 
+```csharp
+	 _playerShots = new List<PlayerShot>();
+```
+4. Look for Ex1Task6 - Step 3 Double click on it and then uncomment the code. This code is the entire "UpdatePlayerShots" method. you should see an error in the code. "AudioManager.Cue.PlayerShot" is not defined. We will get to that shortly.
+5. Look for Ex1Task6 - Step 4 Double click on it and then uncomment the code 
+```csharp
+	UpdatePlayerShots(gameTime);
+```
+6. Look for Ex1Task6 - Step 5 Double click on it and then uncomment the code 
+```csharp
+	// draw the player shots
+        foreach (PlayerShot playerShot in _playerShots)
+        	playerShot.Draw(gameTime, _spriteBatch);
+```
+7. Look for Ex1Task6 - Step 6 Double click on it and then uncomment the code. This fixes the error with  "AudioManager.Cue.PlayerShot" you may have noticed earlier.
+```csharp
+	PlayerShot,
+```
+8.  Look for Ex1Task6 - Step 7 Double click on it and then uncomment the code 
+```csharp
+	private static readonly SoundEffect _playerShot;
+```
+9.  Look for Ex1Task6 - Step 8 Double click on it and then uncomment the code 
+```csharp
+	_playerShot = AlienAttackGame.Instance.Content.Load<SoundEffect>("sfx\\playerShot");
+```
+10.  Look for Ex1Task6 - Step 9 Double click on it and then uncomment the code 
+```csharp
+	case Cue.PlayerShot:
+                    _playerShot.Play();
+                    break;
+```
+11. Hit F5 or click the Run "Local Machine" button.
+
+Now when the game runs you should be able to fire using the space bar.

@@ -117,4 +117,46 @@ That is it! All the other logic is handled in the Sprite class.
 <a name="Ex1Task4" />
 #### Task 4 - Getting the Player Moving ####
 
-This task will involve uncommenting some existing code. 
+This task will involve uncommenting some existing code. In this section we will update the GameScreen to display and move our player. All the relevant code sections have been marked with a 
+
+	//TODO Uncomment <Task> <Step>
+	
+Just follow the //TODO items.
+
+1. Open the Task List in Visual Studio 2015. View->TaskList
+2. Look for Ex1Task4 - Step 1 Double click on it and then uncomment the code 
+```csharp
+	private Player _player;
+```
+3. Go to Ext1Task4 - Step 2 and uncomment the code.
+```csharp
+	 private readonly Player _livesIcon;
+```
+3. Go to Ext1Task4 - Step 3 and uncomment the code.
+```csharp
+	_player = new Player();
+        _player.Position = new Vector2(AlienAttackGame.ScreenWidth / 2 - _player.Width / 2, AlienAttackGame.ScreenHeight - 120);
+```
+4. Go to Ext1Task4 - Step 4 and uncomment the code.
+```csharp
+	_livesIcon = new Player();
+        _livesIcon.Position = new Vector2(20, AlienAttackGame.ScreenHeight - 80);
+        _livesIcon.Scale = new Vector2(0.5f, 0.5f);
+```
+5. Go to Ext1Task4 - Step 5 and uncomment the code. This is the entire MovePlayer method. In this method we make use of the InputManager.ControlState to decide if we need to move the player left or right. Depending on the result we alter the velocity which will then be used in the Sprite.Update method to move the player.
+```csharp
+	_livesIcon = new Player();
+        _livesIcon.Position = new Vector2(20, AlienAttackGame.ScreenHeight - 80);
+        _livesIcon.Scale = new Vector2(0.5f, 0.5f);
+```
+6. Go to Ext1Task4 - Step 6 and uncomment the code. Note how we always pass gameTime into the methods dealing with Updat and Draw. This is so we can update things based on the amount of time that has elasped between frames.
+```csharp
+	MovePlayer(gameTime);
+```
+7. Go to Ext1Task4 - Step 4 and uncomment the code.
+```csharp
+	// draw the player
+        if (_player != null)
+        	_player.Draw(gameTime, _spriteBatch);
+```
+8. Hit F5 or click the Run "Local Machine" button.

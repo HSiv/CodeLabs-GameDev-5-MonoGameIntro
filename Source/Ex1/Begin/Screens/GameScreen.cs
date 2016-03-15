@@ -7,13 +7,14 @@ namespace AlienAttackUniversal.Screens
 {
     class GameScreen : DrawableGameComponent
     {
-        //TODO Uncomment
+        //TODO Uncomment Ex1Task4 - Step 1
         //private Player _player;
+        //TODO Uncomment Ex1Task6 - Step 1
         //private readonly List<PlayerShot> _playerShots;
         private double _lastTime;
         private readonly SpriteBatch _spriteBatch;
 
-        //TODO Uncomment
+        //TODO Uncomment Ex1Task4 - Step 2
         //private readonly Player _livesIcon;
         private Explosion _playerExplosion;
         private readonly Texture2D _bgScreen;
@@ -29,9 +30,10 @@ namespace AlienAttackUniversal.Screens
         {
             _spriteBatch = new SpriteBatch(game.GraphicsDevice);
             AudioManager.StartTheme();
-            //TODO Uncomment
+            //TODO Uncomment Ex1Task4 - Step 3
             //_player = new Player();
             //_player.Position = new Vector2(AlienAttackGame.ScreenWidth / 2 - _player.Width / 2, AlienAttackGame.ScreenHeight - 120);
+            //TODO Uncomment Ex1Task6 - Step 2
             //_playerShots = new List<PlayerShot>();
 
             _font = game.Content.Load<SpriteFont>("font");
@@ -41,8 +43,8 @@ namespace AlienAttackUniversal.Screens
             _bgScreen = game.Content.Load<Texture2D>("gfx\\bgScreen");
 
             // draw a lives status icon in the lower left
-            //TODO Uncomment
-            // _livesIcon = new Player();
+            //TODO Uncomment Ex1Task4 - Step 4
+            //_livesIcon = new Player();
             //_livesIcon.Position = new Vector2(20, AlienAttackGame.ScreenHeight - 80);
             //_livesIcon.Scale = new Vector2(0.5f, 0.5f);
             _enemyGroup = new EnemyGroup();
@@ -51,8 +53,8 @@ namespace AlienAttackUniversal.Screens
 
         private void HandleCollisions(GameTime gameTime)
         {
-            //TODO Uncomment
-            // see if a player shot hit an enemy
+            //TODO Uncomment Ex1Task7 - Step 2
+            //// see if a player shot hit an enemy
             //for (int i = 0; i < _playerShots.Count; i++)
             //{
             //    PlayerShot playerShot = _playerShots[i];
@@ -65,7 +67,6 @@ namespace AlienAttackUniversal.Screens
             //        AudioManager.PlayCue(AudioManager.Cue.Explosion);
             //    }
             //}
-
             //// see if an enemy shot hit the player
             //if (_player != null && _enemyGroup.HandleEnemyShotCollision(_player))
             //{
@@ -76,7 +77,6 @@ namespace AlienAttackUniversal.Screens
             //    _player = null;
             //    AudioManager.PlayCue(AudioManager.Cue.Explosion);
             //}
-
             //// see if an enemy hit the player directly
             //if (_player != null && _enemyGroup.HandleEnemyPlayerCollision(_player))
             //{
@@ -106,7 +106,7 @@ namespace AlienAttackUniversal.Screens
                         // subract 1 life and reset the board
                         _lives--;
                         _enemyGroup.Reset();
-                        //TODO Uncomment
+                        //TODO Uncomment Ex1Task7 - Step 3
                         //_playerShots.Clear();
                         //_player = new Player();
                         //_player.Position = new Vector2(AlienAttackGame.ScreenWidth / 2 - _player.Width / 2, AlienAttackGame.ScreenHeight - 100);
@@ -115,7 +115,7 @@ namespace AlienAttackUniversal.Screens
             }
         }
 
-        //TODO Uncomment
+        //TODO Uncomment Ex1Task6 - Step 3
         //private void UpdatePlayerShots(GameTime gameTime)
         //{
         //    // if we are allowed to fire, add a shot to the list
@@ -139,7 +139,7 @@ namespace AlienAttackUniversal.Screens
         //    }
         //}
 
-        //TODO Uncomment
+        //TODO Uncomment Ex1Task4 - Step 5
         //private void MovePlayer(GameTime gameTime)
         //{
         //    if (_player != null)
@@ -167,13 +167,14 @@ namespace AlienAttackUniversal.Screens
                 }
 
                 _enemyGroup.Reset();
-                //TODO Uncomment
+                //TODO Uncomment Ex1Task7 - Step 4
                 //_playerShots.Clear();
             }
             else
             {
-                //TODO Uncomment
+                //TODO Uncomment Ex1Task4 - Step 6
                 //MovePlayer(gameTime);
+                //TODO Uncomment Ex1Task6 - Step 4
                 //UpdatePlayerShots(gameTime);
             }
 
@@ -193,12 +194,13 @@ namespace AlienAttackUniversal.Screens
             // draw the enemy board
             _enemyGroup.Draw(gameTime, _spriteBatch);
 
-            //TODO Uncomment
-            //// draw the player shots
+            //TODO Uncomment Ex1Task6 - Step 5
+            // draw the player shots
             //foreach (PlayerShot playerShot in _playerShots)
             //    playerShot.Draw(gameTime, _spriteBatch);
 
-            //// draw the player
+            //TODO Uncomment Ex1Task4 - Step 7
+            // draw the player
             //if (_player != null)
             //    _player.Draw(gameTime, _spriteBatch);
 
@@ -210,8 +212,8 @@ namespace AlienAttackUniversal.Screens
             Vector2 scoreSize = _font.MeasureString("Score: " + _score);
             _spriteBatch.DrawString(_font, "Score: " + _score, new Vector2((AlienAttackGame.ScreenWidth - scoreSize.X) / 2, 25), Color.Aqua);
 
-            //TODO Uncomment
-            //// draw the lives icon
+            //TODO Uncomment Ex1Task4 - Step 7
+            // draw the lives icon
             //_livesIcon.Draw(gameTime, _spriteBatch);
             //_spriteBatch.DrawString(_font, "x" + _lives, new Vector2(_livesIcon.Position.X + (_livesIcon.Width * _livesIcon.Scale.X) + 8, _livesIcon.Position.Y), Color.White);
 

@@ -175,7 +175,7 @@ namespace AlienAttackUniversal.Sprites
             return s1.BoundingBox.Intersects(s2.BoundingBox);
         }
 
-        //TODO Uncomment
+        //TODO Uncomment Ex1Task7 - Step 1
         //public bool HandlePlayerShotCollision(PlayerShot playerShot)
         //{
         //    for (int y = 0; y < EnemyRows; y++)
@@ -210,7 +210,7 @@ namespace AlienAttackUniversal.Sprites
         //    }
         //    return false;
         //}
-        //              
+        //
         //public bool HandleEnemyPlayerCollision(Player player)
         //{
         //    for (int y = 0; y < EnemyRows; y++)

@@ -243,3 +243,29 @@ Our next task is to get our ship to shoot.
 11. Hit F5 or click the Run "Local Machine" button.
 
 Now when the game runs you should be able to fire using the space bar.
+
+<a name="Ex1Task7" />
+#### Task 7 - Blowing stuff up! ####
+
+so far we have moving aliens, moving players and lots of shootng, but not explisions. In this task we will add the final bits for the game. Most of the code we will be looking at will be collision handling. for sprite based games collisions are normally handled by checking to see if BoundingBoxes are intersecting. MonoGame has a BoundingBox class. The Sprite class has an boundingbox property which defines where the sprite is in the game. We can use the bounding boxes from two different sprites to see if they collide. This is how we detect if a shot has hit a player.
+
+1. Open the Task List in Visual Studio 2015. View->TaskList
+2. Look for Ex1Task7 - Step 1 Double click on it and then uncomment the code. This is a large chunk of Collision handling code. The methods are HandlePlayerShotCollision, HandleEnemyShotCollision and HandleEnemyPlayerCollision.
+3. Look for Ex1Task7 - Step 2 Double click on it and then uncomment the code. Again this is a fair size chunk of collision code. 
+```csharp
+	private readonly List<PlayerShot> _playerShots;
+```
+3. Look for Ex1Task7 - Step 3 Double click on it and then uncomment the code. 
+```csharp
+	_playerShots.Clear();
+        _player = new Player();
+        _player.Position = new Vector2(AlienAttackGame.ScreenWidth / 2 - _player.Width / 2, AlienAttackGame.ScreenHeight - 100);
+```
+4. Look for Ex1Task7 - Step 4 Double click on it and then uncomment the code. 
+```csharp
+	_playerShots.Clear();
+```
+5. Hit F5 or click the Run "Local Machine" button.
+
+
+That should be everything. You now have a fully functioning game!

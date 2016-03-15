@@ -87,3 +87,34 @@ Most of the content has already been added to the game, but some bits are missin
 6. Right Click on the "sfx" folder in the pipeline tool and click Add->Existing Item
 7. Navigate to "Begin\AlienAttackUniversal\Content\sfx\playerShot.wav"
 11. Click Add.
+
+That is how easy it is to add content to the game. Add the content is included automatically in you project as long as it is in the Content.mcgb file. Some times you have files that you just want to copy over (like .xml files). You can also add those to the Content.mgcb file but set the Build Action to "Copy" and they will also be included.
+
+<a name="Ex1Task3" />
+#### Task 3 - Add the Player ####
+
+The project has a base class for our sprites adding new sprites is going to be very straighforward. This base class is called "Sprite" and if you take a look at the code you will see it handles allot of things. Animation is one of them as well as handling updating a sprites position using its Velocity. Right now we want to add a new Sprite for our Player. 
+
+1. Right click on the Sprites folder and click Add->Class. Call this class Player.cs 
+2. Change the Player so it derives from Sprite
+```csharp
+	class Player : Sprite	
+	{
+	}
+```
+
+3. We now need to load the textures for this spirte. So lets just add a constructor and call LoadContent in it.
+```csharp
+	public Player()
+	{
+		LoadContent(AlienAttackGame.Instance.Content,  "gfx\\player\\player");
+	}
+```
+
+That is it! All the other logic is handled in the Sprite class. 
+
+
+<a name="Ex1Task4" />
+#### Task 4 - Getting the Player Moving ####
+
+This task will involve uncommenting some existing code. 

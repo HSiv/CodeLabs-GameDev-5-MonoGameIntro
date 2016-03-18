@@ -51,9 +51,10 @@ Throughout the module document, you will be instructed to insert code blocks. Fo
 
 <a name="Exercises" />
 ## Exercises ##
+
 This module includes the following exercise:
 
-1.  [Getting Started : Creating your first game](#Exercise1)
+1. [Getting Started: Creating your first game](#Exercise1)
 
 Estimated time to complete this module: **60 minutes**
 
@@ -69,60 +70,78 @@ In this exercise you will create your first MonoGame Windows 10 project.
 
 To get started we need to first create a new "MonoGame Windows 10 Universal Project".
 
-1. Got to File->New Project
-2. File the MonoGame secton in Visual C#->MonoGame
-3. Select "MonoGame Windows 10 Universal Project"
-4. Change the name to "AlienAttackUniversal"
-5. Select where you want to save the soluton. It will default to c:\users\<user>\documents\visual studio 2015\Projects
-6. Click OK 
+1. Got to **File->New Project**.
+
+1. File the MonoGame secton in **Visual C#->MonoGame**.
+
+1. Select **MonoGame Windows 10 Universal Project**.
+
+1. Change the name to "_AlienAttackUniversal_".
+
+1. Select where you want to save the soluton. It will default to **c:\users\<user>\documents\visual studio 2015\Projects**.
+
+1. Click **OK**.
 
 If you take a look at the code you will see allot of "using Microsoft.Xna.Framework" type using clauses... whats going on there? This is MonoGame right? Yes this is MonoGame :) It is a XNA Api compabile cross platform gaming framework. To be XNA Api compatible it needs to use the same namespaces. So if you have used XNA in the past you will feel right at home with MonoGame.
-
 
 <a name="Ex1Task2" />
 #### Task 2 - Rename Game1.cs ####
 
 The default project will create a class called Game1. While you can leave this as it is, its good practice to rename this class. 
 
-1. Right click on Game1.cs  and select Rename.
-2. Type in "AlienAttackGame.cs". You should see a dialog asking if you want to rename all references in the project
-3. Click Yes.
+1. Right-click on **Game1.cs** and select **Rename**.
+
+1. Type in **AlienAttackGame.cs**. You should see a dialog asking if you want to rename all references in the project.
+
+1. Click **Yes**.
 
 <a name="Ex1Task3" />
 #### Task 3 - Add Assets ####
 
 No game would be complete without graphics and sound. Fortunately this session comes with a complete set of assets for you to use. In order to get the maxumin performance for your game you will need to pre-process the assets into a optimized format. This can be done using the MonoGame Pipeline Tool. Its purpose is to task assets like .png/.wav and compress/optimize them for the platform you are targeting. In this case Windows 10. This will allow you to take advangate of things like texture compression which in turn will allow you to include more graphics! and who doesn't like more graphics.
 
-1. Click on the "Content" folder in the Solution to expand it.
-2. Double click on "Content.mgcb". This should open the file in the MonoGame Pipeline Tool. 
-    If the file opens in the code editor. Right Click on "Content.mgcb" and click Open With. The select the "MonoGame Pipeline Tool"
-3. Goto Edit->Add->Existing Folder
-4. Navigate to "End\AlienAttackUniversal\Content\gfx"
-5. Click Add. A dialog will pop up to ask if you want to copy or link the files. Select Copy and click ok.
-6. Goto Edit->Add->Existing Folder
-7. Navigate to "End\AlienAttackUniversal\Content\sfx"
-8. Click Add. A dialog will pop up to ask if you want to copy or link the files. Select Copy and click ok.
-9. Goto Edit->Add->Existing Item
-10. Navigate to "End\AlienAttackUniversal\Content\Font.spritefont"
-11. Click Add. A dialog will pop up to ask if you want to copy or link the files. Select Copy and click ok.
+1. Click on the **Content** folder in the Solution to expand it.
 
+1. Double click on **Content.mgcb**. This should open the file in the MonoGame Pipeline Tool. If the file opens in the code editor. Right-click on **Content.mgcb** and click **Open With**. The select the **MonoGame Pipeline Tool**.
+
+1. Go to **Edit->Add->Existing Folder**.
+
+1. Navigate to **End\AlienAttackUniversal\Content\gfx**.
+
+1. Click **Add**. A dialog will pop up to ask if you want to copy or link the files. Select **Copy** and click **OK**.
+
+1. Go to **Edit->Add->Existing Folder**.
+
+1. Navigate to **End\AlienAttackUniversal\Content\sfx**.
+
+1. Click Add. A dialog will pop up to ask if you want to copy or link the files. Select Copy and click **OK**.
+
+1. Go to **Edit->Add->Existing Item**.
+
+1. Navigate to **End\AlienAttackUniversal\Content\Font.spritefont**.
+
+1. Click **Add**. A dialog will pop up to ask if you want to copy or link the files. Select **Copy** and click **OK**.
 
 <a name="Ex1Task4" />
 #### Task 4 - Load a Texture ####
 
 Now that all the assets have been added to our Content.mgcb file they will be compiled and automatically included in our application package. Our next task is to use the Content manager to load a texture. The code we are about to add will be removed later but it will demonstrate how easy it is to load assets.
 
-1. Open AlienAttackGame.cs if it is not already open.
-2. Add the following code just under the SpriteBatch declaration on line 12.
-```csharp
-	Texture2D background;
-```	
-3. Navigate to the LoadContent method on line 42 and add the following code
-```csharp
-	background = Content.Load<Texture2D> ("gfx/bgScreen");
-```
+1. Open **AlienAttackGame.cs** if it is not already open.
 
-That is all there is to it. The same can be applied to SoundEffect/Meshes etc. The Content.Load method is a generic method so we just specifcy the type we are trying to load. If the types do not match a error will be raised. For example if we try to load a sound effect and pass <Texture2D> we will get an error.
+1. Add the following code just under the **SpriteBatch** declaration on line 12.
+
+	````C#
+	Texture2D background;
+	````
+
+1. Navigate to the **LoadContent** method on line 42 and add the following code
+
+	````C#
+	background = Content.Load<Texture2D> ("gfx/bgScreen");
+	````
+
+That is all there is to it. The same can be applied to SoundEffect/Meshes etc. The Content.Load method is a generic method so we just specifcy the type we are trying to load. If the types do not match a error will be raised. For example, if we try to load a sound effect and pass <Texture2D> we will get an error.
 
 <a name="Ex1Task5" />
 #### Task 5 - Draw a Texture ####
@@ -131,52 +150,57 @@ To render any 2 dimensional (2D) textures we can make use of the SpriteBatch cla
 
 The SpriteBatch has .Begin and .End methods. You use these to define a *batch*, all the calls to the various .Draw methods between a .Begin/.End pair will be optimized and sent to the GPU as efficiently as possible. Lets draw the texture we loaded in Task 4.
 
-1. In the AlienAttachGame.cs file, find the Draw method. It should contain the following code
-```csharp
+1. In the **AlienAttachGame.cs** file, find the Draw method. It should contain the following code
+
+	````C#
 	protected override void Draw(GameTime gameTime)
-       	{
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+	{
+		GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+		// TODO: Add your drawing code here
 
-            base.Draw(gameTime);
-        }
-```
+		base.Draw(gameTime);
+	}
+	````
 
-2. Under the //TODO section add the following code
-```csharp
-            spriteBatch.Begin();
-            spriteBatch.Draw(background, Vector2.Zero, Color.White);
-            spriteBatch.End();
-```
+1. Under the **//TODO** section add the following code
 
-3. Make sure your selected build configuration is set to "Debug" "x64"
-4. Hit F5 or click the Run "Local Machine" button.
+	````C#
+	spriteBatch.Begin();
+	spriteBatch.Draw(background, Vector2.Zero, Color.White);
+	spriteBatch.End();
+	````
+
+1. Make sure your selected build configuration is set to "Debug" "x64".
+
+1. Hit **F5** or click the Run **Local Machine** button.
 
 Congratulations, you just loaded and rendered your first texture!
 
 <a name="Ex1Task6" />
 #### Task 6 - Draw Text ####
 
-
 Drawing text is similar to drawing a texture. We first need to load a font , and then use the SpriteBatch to render the text.
 
-1. Go back to where we declared the background Texture2D and add
-```csharp
+1. Go back to where we declared the background **Texture2D** and add the following code.
+
+	````C#
 	SpriteFont font;
-```
+	````
 
 2. Go to the LoadContent method and add the following underneath were we loaded the texture.
-```csharp
+
+	````C#
 	font = Content.Load<SpriteFont>("Font");
-```
+	````
 
 3. Next modify the Draw code we pasted earlier to include a call to spriteBatch.DrawString just underneath the call to draw our texture.
-```csharp
-	spriteBatch.DrawString(font, "MonoGame Rocks!", Vector2.Zero, Color.White);
-```
 
-4.  Hit F5 or click the Run "Local Machine" button.
+	````C#
+	spriteBatch.DrawString(font, "MonoGame Rocks!", Vector2.Zero, Color.White);
+	````
+
+4.  Hit **F5** or click the Run **Local Machine** button.
 
 You should see the text in the top left corner of the screen. Note the order of the batch items is important. If we had put the call to DrawString above the line which draws the texture it would not be show. This is because the texture would be drawn after the text. Because the texture takes up the entire screen it will overwrite the text.  
 
@@ -189,42 +213,53 @@ Depending on the format of your audio will depend on the defalt content *Process
 
 Lets load the music for the game.
 
-1.  Go back to where we declared the background Texture2D and add
-```csharp
+1. Go back to where we declared the background **Texture2D** and add the following code.
+
+	````C#
 	Song song;
-```	
+	````
 
-2.  Right click on the "Song" class and use the Quick Actions to add a using for *Microsoft.Xna.Framework.Media* or add it manually
-```csharp
+1. Right-click on the "Song" class and use the **Quick Actions** to add a using for _Microsoft.Xna.Framework.Media_ or add it manually.
+
+	````C#
 	using Microsoft.Xna.Framework.Media;
-```	
+	````
 
-3.  Go to the LoadContent method and add the following underneath were we loaded the texture.
- ```csharp
+1. Go to the **LoadContent** method and add the following underneath were we loaded the texture.
+
+	````C#
 	song = Content.Load<Song>("sfx/theme");
 	MediaPlayer.IsRepeating = true;
 	MediaPlayer.Play(song);
-```
+	````
 
-3. Hit F5 or click the Run "Local Machine" button.
+1. Hit **F5** or click the Run **Local Machine** button.
 
 You should hear the music playing when the app starts.
 
 <a name="Ex1Task8" />
 #### Task 8 - Playing Sound ####
 
-1.  Go back to where we declared the background Texture2D and add
+1.  Go back to where we declared the background Texture2D and add the following code.
+
+	````C#
 	SoundEffect playerShot;
-2.  Right click on the "SoundEffect" class and use the Quick Actions to add a using for *Microsoft.Xna.Framework.Audio* or add it manually
-```csharp
+	````
+
+1. Right-click on the **SoundEffect** class and use the **Quick Actions** to add a using for _Microsoft.Xna.Framework.Audio_ or add it manually.
+
+	````C#
 	using Microsoft.Xna.Framework.Audio;
-```	
-3.  Go to the LoadContent method and add the following underneath were we loaded the texture.
- ```csharp
+	````
+
+1. Go to the LoadContent method and add the following underneath were we loaded the texture.
+
+	````C#
 	playerShot = Content.Load<SoundEffect>("sfx/playerShot");
 	playerShot.Play ();
-```	
-3. Hit F5 or click the Run "Local Machine" button.
+	````
+
+1. Hit **F5** or click the Run **Local Machine** button.
  
 When the application starts you should hear the playerShot sound effect play. 
 
@@ -233,53 +268,58 @@ When the application starts you should hear the playerShot sound effect play.
 
 At this point you know how to load the basic assets needed to write a game. There are other assets like Shaders and custom content but to get started all you need is Textures, Fonts, SoundEffects and Music. We can now start writing the game. Our game will have a couple of screens. A Title screen and a Game screen. Each will be responsible for rendering itself and responding to player input. To implement these we are going to use the *DrawableGameComponent* class. MonoGame has a concept of *Components* which you can add to the game  and will automatically update and render themselve. First there is athe GameComponent which can be used for code that just needs to update every frame. The DrawableGameComponent adds a virtual Draw method which can be used to draw items. Since both our Title screne and Game screen will need to draw graphics they will both derive from DrawableGameComponent.
 
-1. In the solution explorer right click on the AlienAttackUniveral project and click Add->New Folder. Name this folder Screens.
-2. Right click on the Screens folder and click Add->Class. Call this class TitleScreen.cs
-3. Add the following using clauses to the top of the TitleScreen.cs . These will import the required MonoGame namespaces
-```csharp
+1. In the **Solution Explorer** right-click on the **AlienAttackUniveral** project and click **Add->New Folder**. Name this folder _Screens_.
+
+1. Right-click on the Screens folder and click **Add->Class**. Call this class **TitleScreen.cs**.
+
+1. Add the following using clauses to the top of the **TitleScreen.cs**. These will import the required MonoGame namespaces.
+
+	````C#
 	using Microsoft.Xna.Framework;
 	using Microsoft.Xna.Framework.Graphics;
-```
+	````
 
-4. Change the TitleScreen class so it derives from DrawableGameComponent.
-```csharp
-	class TitleScreen : DrawableGameComponent
-```
+1. Change the **TitleScreen** class so it derives from **DrawableGameComponent**.
 
-5. Next add a contructor. The base GameComponent class *requires* a Game instance parameter for its constructor to our constructor needs to look like the following.
-```csharp
+1. Next, add a contructor. The base GameComponent class _requires_ a Game instance parameter for its constructor to our constructor needs to look like the following.
+
+	````C#
 	public TitleScreen(Game game) : base(game)
-        {
+	{
 	}
-```
+	````
 
-6. Next we need to add some private fields to hold Textures, Fonts and a SpriteBatch with which to draw them.
-```csharp
+1. Next, we need to add some private fields to hold Textures, Fonts and a SpriteBatch with which to draw them.
+
+	````C#
 	private readonly Texture2D _titleScreen;
-        private readonly SpriteFont _font;
-        private readonly SpriteBatch _spriteBatch;
-```
+	private readonly SpriteFont _font;
+	private readonly SpriteBatch _spriteBatch;
+	````
 
-7. Now update the constructor to create/load these items.
-```csharp
+1. Now, update the constructor to create/load these items.
+
+	````C#
 	public TitleScreen(Game game) : base(game)
-        {
-            _spriteBatch = new SpriteBatch(game.GraphicsDevice);
-            _titleScreen = game.Content.Load<Texture2D>("gfx\\titleScreen");
-            _font = game.Content.Load<SpriteFont>("Font");
-        }
-```
+	{
+		_spriteBatch = new SpriteBatch(game.GraphicsDevice);
+		_titleScreen = game.Content.Load<Texture2D>("gfx\\titleScreen");
+		_font = game.Content.Load<SpriteFont>("Font");
+	}
+	````
 
-8. Finally we need to override the Draw method. The Draw (and Update) method takes a GameTime parameter. This is how we keep tack of time in the game. It holds how much time has elapsed since the game started and the elasped time since the last frame. we'll use this information later in our GameScreen. For now the Draw method on the TitleScreen just needs to render the texture we loaded as some text.
-```csharp
+1. Finally we need to override the Draw method. The Draw (and Update) method takes a GameTime parameter. This is how we keep tack of time in the game. It holds how much time has elapsed since the game started and the elasped time since the last frame. we'll use this information later in our GameScreen. For now the Draw method on the TitleScreen just needs to render the texture we loaded as some text.
+
+	````C#
 	public override void Draw(GameTime gameTime)
-        {
-            _spriteBatch.Begin();
-            _spriteBatch.Draw(_titleScreen, Vector2.Zero, Color.White);
-            _spriteBatch.DrawString(_font, "Press Enter or Tap to Play", new Vector2(1200, 960), Color.White);
-            _spriteBatch.End();
-        }
-```
+	{
+		_spriteBatch.Begin();
+		_spriteBatch.Draw(_titleScreen, Vector2.Zero, Color.White);
+		_spriteBatch.DrawString(_font, "Press Enter or Tap to Play", new Vector2(1200, 960), Color.White);
+		_spriteBatch.End();
+	}
+	````
+
 
 In the next section we will update the AlienAttackGame class to make use of this new class. 
 
@@ -288,100 +328,110 @@ In the next section we will update the AlienAttackGame class to make use of this
 
 Now that we have a basic TitleScreen we need to be able to render it. To do that we need to remove all of the code we added to the AlienAttackGame class earlier and add a few new methods.
 
-1. Open the AlienAttackGame.cs if it is not already open.
-2. Add a using clause for 
-```csharp
+1. Open the **AlienAttackGame.cs** if it is not already open.
+
+1. Add a using clause for _AlienAttackUniversal.Screens_.
+
+	````C#
 	using AlienAttackUniversal.Screens;
-```	
-3. Select the *entire* AlienAttackGame *class* and replace it with the following 
-```csharp
+	````
+
+1. Select the _entire_ **AlienAttackGame** _class_ and replace it with the following.
+ 
+	````C#
 	/// <summary>
 	/// This is the main type for your game
 	/// </summary>
 	public class AlienAttackGame : Game
 	{        
-	        public AlienAttackGame()
-	        {            
-	        }
-	
-	        /// <summary>
-	        /// Allows the game to perform any initialization it needs to before starting to run.
-	        /// This is where it can query for any required services and load any non-graphic
-	        /// related content.  Calling base.Initialize will enumerate through any components
-	        /// and initialize them as well.
-	        /// </summary>
-	        protected override void Initialize()
-	        {
-	            base.Initialize();
-	        }
-	
-	        /// <summary>
-	        /// LoadContent will be called once per game and is the place to load
-	        /// all of your content.
-	        /// </summary>
-	        protected override void LoadContent()
-	        {
-	        }
-	
-	        /// <summary>
-	        /// UnloadContent will be called once per game and is the place to unload
-	        /// all content.
-	        /// </summary>
-	        protected override void UnloadContent()
-	        {
-	        }
-	
-	        /// <summary>
-	        /// Allows the game to run logic such as updating the world,
-	        /// checking for collisions, gathering input, and playing audio.
-	        /// </summary>
-	        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-	        protected override void Update(GameTime gameTime)
-	        {
-	            base.Update(gameTime);
-	        }
-	
-	        /// <summary>
-	        /// This is called when the game should draw itself.
-	        /// </summary>
-	        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-	        protected override void Draw(GameTime gameTime)
-	        {
-	        }        
-	}
-```
+		public AlienAttackGame()
+		{            
+		}
 
-4. We need to create an enumeration to define the current *screen* in the game. Add the following code above the AlienAttackGame class.	
-```csharp
+		/// <summary>
+		/// Allows the game to perform any initialization it needs to before starting to run.
+		/// This is where it can query for any required services and load any non-graphic
+		/// related content.  Calling base.Initialize will enumerate through any components
+		/// and initialize them as well.
+		/// </summary>
+		protected override void Initialize()
+		{
+			base.Initialize();
+		}
+
+		/// <summary>
+		/// LoadContent will be called once per game and is the place to load
+		/// all of your content.
+		/// </summary>
+		protected override void LoadContent()
+		{
+		}
+
+		/// <summary>
+		/// UnloadContent will be called once per game and is the place to unload
+		/// all content.
+		/// </summary>
+		protected override void UnloadContent()
+		{
+		}
+
+		/// <summary>
+		/// Allows the game to run logic such as updating the world,
+		/// checking for collisions, gathering input, and playing audio.
+		/// </summary>
+		/// <param name="gameTime">Provides a snapshot of timing values.</param>
+		protected override void Update(GameTime gameTime)
+		{
+			base.Update(gameTime);
+		}
+
+		/// <summary>
+		/// This is called when the game should draw itself.
+		/// </summary>
+		/// <param name="gameTime">Provides a snapshot of timing values.</param>
+		protected override void Draw(GameTime gameTime)
+		{
+		}
+	}
+	````
+
+1. We need to create an enumeration to define the current _screen_ in the game. Add the following code above the **AlienAttackGame** class.
+
+	````C#
  	public enum GameState
 	{
 		TitleScreen,
 		GameScreen
 	};
-```
-5. Now we need to declare a few properties to store which screen we are on and allow access to the instance of the game from anywhere. We also want to define our screen resolution that we want to use. Add the following to the top of the AlienAttackGame class
-```csharp
+	````
+
+1. Now, we need to declare a few properties to store which screen we are on and allow access to the instance of the game from anywhere. We also want to define our screen resolution that we want to use. Add the following to the top of the **AlienAttackGame** class.
+
+	````C#
 	public static AlienAttackGame Instance;
 	private readonly GraphicsDeviceManager _graphics;
 	private DrawableGameComponent _screen;
 	public static int ScreenWidth = 1920;
 	public static int ScreenHeight = 1080;
-```
+	````
 
-6. Next update the constructor to create/set all of these properties
-```csharp
+
+1. Next, update the constructor to create/set all of these properties.
+
+	````C#
 	Instance = this;
 	_graphics = new GraphicsDeviceManager(this);
 	// set our screen size based on the device
 	_graphics.PreferredBackBufferWidth = ScreenWidth;
 	_graphics.PreferredBackBufferHeight = ScreenHeight;
 	Content.RootDirectory = "Content";
-```
+	````
 
-Note we set the static Instance field to this. Using this field we can access the *instance* of the game just by using AlienAttackGame.Instance. We also create our graphics device manager and set our preferred resolution. The Content manager is also given the "RootDirectory" which is the base directory it will look for the compiled assets.
+	Note we set the static Instance field to this. Using this field we can access the *instance* of the game just by using AlienAttackGame.Instance. We also create our graphics device manager and set our preferred resolution. The Content manager is also given the "RootDirectory" which is the base directory it will look for the compiled assets.
 
-7. Next we need to add a method which will allow us to change which screen we are showing. This methid is called SetState and will update the _screen field we just created. Add the following code somewhere near the bottom of the AlienAttackGame class.
-```csharp
+1. Next, we need to add a method which will allow us to change which screen we are showing. This methid is called SetState and will update the **_screen** field we just created. Add the following code somewhere near the bottom of the **AlienAttackGame** class.
+
+	````C#
 	public void SetState(GameState newState)
 	{
 		switch(newState)
@@ -393,29 +443,36 @@ Note we set the static Instance field to this. Using this field we can access th
 				break;
 		}
 	}
-```	
-This method currently only updates the _screen field for a TitleScreen gamestate. We'll add code for the GameScreen later.
+	````
 
-8. Now find the Initialize method and add a call to SetState (GameState.TitleScreen). This is to that when the game starts it will default to the title screen. Initialize is only called when the game starts.
-```csharp
+
+	This method currently only updates the **_screen** field for a TitleScreen gamestate. We'll add code for the GameScreen later.
+
+1. Now, find the Initialize method and add a call to SetState (GameState.TitleScreen). This is to that when the game starts it will default to the title screen. Initialize is only called when the game starts.
+
+	````C#
 	protected override void Initialize()
-        {
-            SetState(GameState.TitleScreen);
-            base.Initialize();
-        }
-```
+	{
+		SetState(GameState.TitleScreen);
+		base.Initialize();
+	}
+	````
 
-9. Add the following code to the Update method. This will make sure that our *current* screen is updated every frame.
-```csharp
+
+1. Add the following code to the Update method. This will make sure that our _current_ screen is updated every frame.
+
+	````C#
 	_screen.Update(gameTime);
-```	
+	````
 
-10. Finally add the following code to the Draw methid. This will draw our *current* screen.
- ```csharp
- 	_screen.Draw(gameTime);
-```
+1. Finally, add the following code to the Draw methid. This will draw our _current_ screen.
 
-11. Hit F5 or click the Run "Local Machine" button.
+	````C#
+	_screen.Draw(gameTime);
+	````
+
+
+1. Hit **F5** or click the Run **Local Machine** button.
 
 You should now see the title screen rendered.
 
@@ -428,63 +485,72 @@ Well spriteBatch is a low level drawing system. It doesn't care about scaling or
 
 SpriteBatch can take a scale matix which it can use to scale the coordinates and graphics passed to it. But this method can be a bit msessy. Wouldn't it be great if there was a way to draw at a fixed known resolution and then scale that? Well it turns out there is its called a RenderTarget. Simply put a RenderTarget is a texture to can draw to. When to tell the graphics device to use a RenderTarget you are basically telling it to not draw on the screen but onto the texture. Now because a RenderTarget derives from Texture we can then use it with a spriteBatch to draw but scale the results. This way we can draw our game at a fixed resolution. 
 
-What we will do next is add a new helper class called *RenderTargetScaler* which we can then use to scale our entire game to fit the window.
+What we will do next is add a new helper class called _RenderTargetScaler_ which we can then use to scale our entire game to fit the window.
 
-1. Right click on the AlienAttackUniversal Project in the solution explorer and click Add->Class and add a "RenderTargetScaler.cs"
-2. Add the following using clauses to the top of RenderTargetScaler.cs to bring in the required namespaces.
-```csharp
+1. Right-click on the AlienAttackUniversal Project in the solution explorer and click **Add->Class** and add a "RenderTargetScaler.cs".
+
+1. Add the following using clauses to the top of **RenderTargetScaler.cs** to bring in the required namespaces.
+
+	````C#
 	using Microsoft.Xna.Framework;
 	using Microsoft.Xna.Framework.Graphics;
-```	
-3. Next we need a few fields for our scaler. The most important of which is our _drawBuffer which is a RenderTarget2D. This is what we will draw our entire game to before using the scaler to draw the _drawBuffer on the screen.
-```csharp
+	````
+
+1. Next, we need a few fields for our scaler. The most important of which is our _drawBuffer which is a RenderTarget2D. This is what we will draw our entire game to before using the scaler to draw the _drawBuffer on the screen.
+
+	````C#
 	private readonly RenderTarget2D _drawBuffer;
-        private readonly GraphicsDeviceManager _graphicsDeviceManager;
-        private readonly int _screenWidth;
-        private readonly int _screenHeight;
-        private readonly Game _game;
-        private readonly SpriteBatch _spriteBatch;
-```
+	private readonly GraphicsDeviceManager _graphicsDeviceManager;
+	private readonly int _screenWidth;
+	private readonly int _screenHeight;
+	private readonly Game _game;
+	private readonly SpriteBatch _spriteBatch;
+	````
 
-Note there is another SpriteBatch in this list. Normally you will want to keep the number of SpriteBatch instances to a minimum, this is because they maintain an internal list of items that need to be rendered. Its more memory efficient to only have one or two of them. 
-4. Next we need to add a constructor. This will need to take an instance of the Game class so we can get things like the Window, the GraphihcsDeviceManager we created in the AlienAttackGame class and the resolution we are going to draw our game in.
+	Note there is another SpriteBatch in this list. Normally you will want to keep the number of SpriteBatch instances to a minimum, this is because they maintain an internal list of items that need to be rendered. Its more memory efficient to only have one or two of them. 
 
-```csharp
+1. Next, we need to add a constructor. This will need to take an instance of the Game class so we can get things like the Window, the **GraphihcsDeviceManager** we created in the **AlienAttackGame** class and the resolution we are going to draw our game in.
+
+	````C#
 	public RenderTargetScaler(Game game, GraphicsDeviceManager graphicsDeviceManager, int width, int height)
-        {
-        }
-```
+	{
+	}
+	````
 
-5. Next we set all of our local fields and create an instance of the _spriteBatch in the new constructor we just added.
-```csharp
+1. Next, we set all of our local fields and create an instance of the _spriteBatch in the new constructor we just added.
+
+	````C#
 	_game = game;            
 	_graphicsDeviceManager = graphicsDeviceManager;
 	_screenWidth = width;
 	_screenHeight = height;
 	_spriteBatch = new SpriteBatch(graphicsDeviceManager.GraphicsDevice); 
-```
+	````
 
-6. We now need to create our render target. This requires the GraphicsDevice, and our target width and height.
-```csharp
+1. We now need to create our render target. This requires the GraphicsDevice, and our target width and height.
+
+	````C#
 	_drawBuffer = new RenderTarget2D(graphicsDeviceManager.GraphicsDevice, width, height);
-```
+	````
 
-7. That is all we need in the constructor. Next we need a way to tell the GraphicsDevice to use the render target not the screen. We can do that via the GraphicsDevice.SetRenderTarget method. This method takes a RenderTarget2D instance or a null, if we pass null that tells the GraphicsDevice to draw to the screen. If we pass an instance it will use the RenderTarget. We'll add a helper methd to make things a bit eaier for ourselves
-```csharp
+1. That is all we need in the constructor. Next we need a way to tell the GraphicsDevice to use the render target not the screen. We can do that via the GraphicsDevice.SetRenderTarget method. This method takes a RenderTarget2D instance or a null, if we pass null that tells the GraphicsDevice to draw to the screen. If we pass an instance it will use the RenderTarget. We'll add a helper methd to make things a bit eaier for ourselves.
+
+	````C#
 	public void SetRenderTarget()
 	{
 		_graphicsDeviceManager.GraphicsDevice.SetRenderTarget(_drawBuffer);
 	}
-```
+	````
 
-Any spriteBatch draw calls made after this method is called will draw on the _drawBuffer. As soon as we call SetRenderTartet (null) it will revert back to drawing on the screen. We'll add that in our next helper method.
+Any spriteBatch draw calls made after this method is called will draw on the **_drawBuffer**. As soon as we call SetRenderTartet (null) it will revert back to drawing on the screen. We'll add that in our next helper method.
 
-8. Now we need a Draw method. This is where we will calculate our scaling factor, clear the render target (using null), then use the spriteBatch to draw our _drawBuffer to the screen. For now just add the new Draw method
-```csharp
+1. Now we need a Draw method. This is where we will calculate our scaling factor, clear the render target (using null), then use the spriteBatch to draw our **_drawBuffer** to the screen. For now just add the new Draw method.
+
+	````C#
 	public void Draw ()
 	{
 	}
-```
+	````
 
 In the next section we'll figure out our scaling factors and fill in the rest of the Draw method.
 
@@ -494,18 +560,21 @@ In the next section we'll figure out our scaling factors and fill in the rest of
 In the previous section we added a helper class to handle scaling our game. When scaling we will want to use a techique called Letterboxing. This is where rather than just stretching the texture so it fills the entire window, we stretch it so we maintain the aspect ration of the texture. For example of we have a texture that is 1024x768 (4:3) and stretched it to a window that was 1280x720 (16:9) that would look really really weird and distorted. So what we do it create a "letterbox" by adding padding to either the top/bottom or the left/right to make sure we maintain the origional aspect ratio of the texture. 
 
 1. You should already be in the Draw method. The first thing we need to do is figure out the current aspect ratios for our window and our fixed resolution we are drawing at. We do that by dividing the width by the height.
-```csharp
+
+	````C#
 	float outputAspect = _game.Window.ClientBounds.Width / (float)_game.Window.ClientBounds.Height;
 	float preferredAspect = _screenWidth / (float)_screenHeight;
-```
+	````
 
-2. Add a Rectangle called dst. This will hold our destination rectangle which is where we will draw the _drawBuffer. We will calcuate this in the next step.
-```csharp
+1. Add a Rectangle called dst. This will hold our destination rectangle which is where we will draw the **_drawBuffer**. We will calcuate this in the next step.
+
+	````C#
 	Rectangle dst;
-```
+	````
 
-3. Next we need to decide if we need to add padding to the top or the sides to get our letterbox effect. Of our *outputAspect* is less than the *preferredAspect* we need to pad the top and bottom. Otherwise we need to add the padding to the left and right.
-```csharp
+1. Next, we need to decide if we need to add padding to the top or the sides to get our letterbox effect. Of our *outputAspect* is less than the *preferredAspect* we need to pad the top and bottom. Otherwise we need to add the padding to the left and right.
+
+	````C#
 	if (outputAspect <= preferredAspect)
 	{
 		// output is taller than it is wider, bars on top/bottom
@@ -520,46 +589,52 @@ In the previous section we added a helper class to handle scaling our game. When
 		int barWidth = (_game.Window.ClientBounds.Width - presentWidth) / 2;
 		dst = new Rectangle(barWidth, 0, presentWidth, _game.Window.ClientBounds.Height);
 	}
-```
+	````
 
-4. Now we have the dst Rectangle calulcated we can start drawing the _drawBuffer. But before we do we need to make sure the GraphicsDevce is NOT using the render target.
-```csharp
+1. Now, we have the dst Rectangle calulcated we can start drawing the _drawBuffer. But before we do we need to make sure the GraphicsDevce is NOT using the render target.
+
+	````C#
 	_graphicsDeviceManager.GraphicsDevice.SetRenderTarget(null);
-```	
+	````
 
-5. Next we want to clear the screen with a nice Black color. You could use a different color but black is normally used because it matches the default color of a screen :).
-```csharp
+1. Next, we want to clear the screen with a nice Black color. You could use a different color but black is normally used because it matches the default color of a screen :).
+
+	````C#
 	_graphicsDeviceManager.GraphicsDevice.Clear(Color.Black);
-```
+	````
 
-6. Finally we use the spriteBatch to draw our _drawBuffer. Note this time we are using the dst Rectangle rather than a Vector2 to define where on the screen this texture will be drawn. The SpriteBatch will scale the texture to fill that Rectangle, and because we took care to calculate our Rectangle based on the aspect ratio it will look correct.
-```csharp
+1. Finally, we use the spriteBatch to draw our _drawBuffer. Note this time we are using the dst Rectangle rather than a Vector2 to define where on the screen this texture will be drawn. The SpriteBatch will scale the texture to fill that Rectangle, and because we took care to calculate our Rectangle based on the aspect ratio it will look correct.
+
+	````C#
 	_spriteBatch.Begin();
 	_spriteBatch.Draw(_drawBuffer, dst, Color.White);
 	_spriteBatch.End();
-```
+	````
 
-7. We now have all the bits in place in our helper class. Now go back to the AlienAttackGame class and add field for the RenderTargetScaler below all the other fields
-```csharp
+1. We now have all the bits in place in our helper class. Now go back to the AlienAttackGame class and add field for the RenderTargetScaler below all the other fields.
+
+	````C#
 	private RenderTargetScaler _scaler;
-```
+	````
 
-8. In the AlienAttackGame Initialize method create an instance of the _scaler just BEFORE we call SetGameState
-```csharp
+1. In the AlienAttackGame Initialize method create an instance of the **_scaler** just BEFORE we call SetGameState.
+
+	````C#
 	_scaler = new RenderTargetScaler(this, _graphics, ScreenWidth, ScreenHeight);
-```
+	````
 
-9. Finally update the Draw method of the AlienAttackGame to match the following code 
-```csharp
+1. Finally, update the Draw method of the AlienAttackGame to match the following code 
+
+	````C#
 	protected override void Draw(GameTime gameTime)
 	{
 		_scaler.SetRenderTarget();
 		_screen.Draw(gameTime);
 		_scaler.Draw();
 	}
-```
+	````
 
-Note how we call _scaler.SetRenderTarget () first then after we draw the screen , we then call _scaler.Draw. This will make sure the screen is correctly scaled for the window.
+Note how we call **_scaler.SetRenderTarget()** first then after we draw the screen , we then call **_scaler.Draw**. This will make sure the screen is correctly scaled for the window.
 
 <a name="Ex1Task13" />
 #### Task 13 - Handling Input ####
@@ -568,22 +643,25 @@ In this task we will add input support for our game. MonoGame comes with a compl
 
 Rather than littering our game code with lots of different input methods we will wrap them all up into on InputManager class. This will have one Update method to retrive the current input state. It will then expose this state via some static variables so we can access it throught the game code. 
 
+1. Right-click on the AlienAttackUniversal Project in the solution explorer and click Add->Class and add a "InputManager.cs". Then change the InputManager class to be static.
 
-1.  Right click on the AlienAttackUniversal Project in the solution explorer and click Add->Class and add a "InputManager.cs". Then change the InputManager class to be static.
-```csharp
+	````C#
 	static class InputManager
 	{
 	}
-```
+	````
 
-2.  Add the following using clauses to the top of the InputManager.cs class file
-```csharp
+1. Add the following using clauses to the top of the InputManager.cs class file.
+
+	````C#
 	using Microsoft.Xna.Framework;
 	using Microsoft.Xna.Framework.Input;
 	using Microsoft.Xna.Framework.Input.Touch;
-```	
-3. Add the new ControlState enumeation just above the InputManager class.  This structure will be exposed as a static and will let us know which controls are active.
-```csharp
+	````
+
+1. Add the new ControlState enumeation just above the InputManager class.  This structure will be exposed as a static and will let us know which controls are active.
+
+	````C#
 	public struct ControlState
 	{
 		public bool Left;
@@ -593,64 +671,71 @@ Rather than littering our game code with lots of different input methods we will
 		public bool Fire;
 		public float FingerPosition;
 	}
-```
+	````
 
-4. We now need to declare some internal fields to hold our control *state*. Note we store the current AND previous state for Keyboard and GamePads. This allows us to caclualate what has changed between frames.
+1. We now need to declare some internal fields to hold our control _state_. Note we store the current AND previous state for Keyboard and GamePads. This allows us to caclualate what has changed between frames.
  
-```csharp
+	````C#
 	private static KeyboardState _keyboardState, _lastKeyboard;
 	private static GamePadState _gamePadState, _lastGamePad;
 	private static ControlState _controlState;
-```
+	````
 
-5. Next we need a static constructor. In this we will tell the TouchPanel class which *Gestures* we can enabled. In this case if a user taps the screen or id they drag horizontally. We will use the former to handle firing and the latter for moving the player.
+1. Next, we need a static constructor. In this we will tell the TouchPanel class which *Gestures* we can enabled. In this case if a user taps the screen or id they drag horizontally. We will use the former to handle firing and the latter for moving the player.
  
-```csharp
+	````C#
 	static InputManager()
 	{
 		TouchPanel.EnabledGestures = GestureType.Tap | GestureType.HorizontalDrag;
 	}
-```
+	````
 
-5. Its time to add the update method. This needs to be public and static so it can be called from anywhere in the game.
-```csharp
+
+1. Its time to add the update method. This needs to be public and static so it can be called from anywhere in the game.
+
+	````C#
 	public static void Update()
 	{
 	}
-```
+	````
 
-6. Before we fill in the Update method we will add the public static property for the ControlState structure we decalred earlier.
-```csharp
+1. Before we fill in the Update method we will add the public static property for the ControlState structure we decalred earlier.
+
+	````C#
 	public static ControlState ControlState
 	{
 		get { return _controlState; }
 	}
-```
+	````
 
-7. Now for the intersting bit. We need to retireve the current state for the all the inputs then caclulate the ControlState. First this to do is to get the Keyboard and GamePad states. Add the following code to the Update method.
-```csharp
+1. Now, for the intersting bit. We need to retireve the current state for the all the inputs then caclulate the ControlState. First this to do is to get the Keyboard and GamePad states. Add the following code to the Update method.
+
+	````C#
 	_keyboardState = Keyboard.GetState();
 	_gamePadState = GamePad.GetState(PlayerIndex.One);
-```
+	````
 
-8. Now we need to set the ControlState fields depending on the states we got. For example the following code 
-```csharp
+1. Now we need to set the ControlState fields depending on the states we got. For example the following code.
+
+	````C#
 	_controlState.Quit = (_gamePadState.Buttons.Back== ButtonState.Pressed || _keyboardState.IsKeyDown(Keys.Escape));
-```	
-  sets the "Quit" field if the Gamepad "Back" buttons is pressed OR is the Escape Key is pressed on the keyboard. 
-  Add the following code to the Update method.
+	````
 
-```csharp
+1. Sets the "Quit" field if the Gamepad "Back" buttons is pressed OR is the Escape Key is pressed on the keyboard. 
+
+1. Add the following code to the Update method.
+
+	````C#
 	_controlState.Quit = (_gamePadState.Buttons.Back == ButtonState.Pressed || _keyboardState.IsKeyDown(Keys.Escape));
-        _controlState.Start = (_gamePadState.Buttons.B == ButtonState.Pressed || _keyboardState.IsKeyDown(Keys.Enter) || 		_keyboardState.IsKeyDown(Keys.Space) || _gamePadState.IsButtonDown(Buttons.Start));
-         _controlState.Left = (_gamePadState.DPad.Left == ButtonState.Pressed || _gamePadState.ThumbSticks.Left.X < -0.1f || _keyboardState.IsKeyDown(Keys.Left));
-        _controlState.Right = (_gamePadState.DPad.Right == ButtonState.Pressed || _gamePadState.ThumbSticks.Left.X > 0.1f || _keyboardState.IsKeyDown(Keys.Right));
-        _controlState.Fire = ((_gamePadState.Buttons.B == ButtonState.Pressed && _lastGamePad.Buttons.B == ButtonState.Released) || (_keyboardState.IsKeyDown(Keys.Space) && !_lastKeyboard.IsKeyDown(Keys.Space)));
-```        
+	_controlState.Start = (_gamePadState.Buttons.B == ButtonState.Pressed || _keyboardState.IsKeyDown(Keys.Enter) || _keyboardState.IsKeyDown(Keys.Space) || _gamePadState.IsButtonDown(Buttons.Start));
+	_controlState.Left = (_gamePadState.DPad.Left == ButtonState.Pressed || _gamePadState.ThumbSticks.Left.X < -0.1f || _keyboardState.IsKeyDown(Keys.Left));
+	_controlState.Right = (_gamePadState.DPad.Right == ButtonState.Pressed || _gamePadState.ThumbSticks.Left.X > 0.1f || _keyboardState.IsKeyDown(Keys.Right));
+	_controlState.Fire = ((_gamePadState.Buttons.B == ButtonState.Pressed && _lastGamePad.Buttons.B == ButtonState.Released) || (_keyboardState.IsKeyDown(Keys.Space) && !_lastKeyboard.IsKeyDown(Keys.Space)));
+	````
         
-9. That covers the GamePad and Keyboard. Next is the Touch Gestures. The TouchPanel class exposed s IsGestureAvailable property which tells us if a gesture was detected. It also provides a ReadGesture method to read the current gesture.  Note Gestures are queued so it is possible to get multiple gestures in on frame.. e.g a Tap and a Drag. So we need to loop through until IsGestureAvailable is false. Add the following code to the Update Method
+1. That covers the GamePad and Keyboard. Next is the Touch Gestures. The TouchPanel class exposed s IsGestureAvailable property which tells us if a gesture was detected. It also provides a ReadGesture method to read the current gesture. Note Gestures are queued so it is possible to get multiple gestures in on frame.. e.g a Tap and a Drag. So we need to loop through until IsGestureAvailable is false. Add the following code to the Update Method
  
-```csharp
+	````C#
 	while(TouchPanel.IsGestureAvailable)
 	{
 		GestureSample gs = TouchPanel.ReadGesture();
@@ -663,24 +748,24 @@ Rather than littering our game code with lots of different input methods we will
 			_controlState.FingerPosition = gs.Position.X;
 		}
 	}
-```
+	````
 
-You shold be able to see we just loop while we have gestures, and depending on the gesture type we will set the control state. If we get a horizontal drag we will set the Left/Right control state fields depending on which direction the drag was it. We also store the current position for later.
+	You shold be able to see we just loop while we have gestures, and depending on the gesture type we will set the control state. If we get a horizontal drag we will set the Left/Right control state fields depending on which direction the drag was it. We also store the current position for later.
 
-10. Finally we need to store the current state in the _last*State fields so we can detect changes in the next frame.
+1. Finally, we need to store the current state in the _last*State fields so we can detect changes in the next frame.
 
-```csharp
+	````C#
 	_lastGamePad = _gamePadState;
-        _lastKeyboard = _keyboardState;
-```
+	_lastKeyboard = _keyboardState;
+	````
 
-That covers the InputMananger. We can now use code like the following anywhere in the game to check the input.
+1. That covers the InputMananger. We can now use code like the following anywhere in the game to check the input.
 
-```csharp
+	````C#
 	If (InputManager.Controlstate.Quit) {
 		// quit the game
 	}
-```
+	````
 
 Our next task is the Audio Manager.
 
@@ -689,37 +774,46 @@ Our next task is the Audio Manager.
 
 Just like the InputManager the audio manager will be responsible for handling the loading and playing of all audio in the game. 
 
-1.  Right click on the AlienAttackUniversal Project in the solution explorer and click Add->Class and add a "AudioManager.cs". Then change the AudioManager class to be static.
-```csharp
+1. Right-click on the AlienAttackUniversal Project in the solution explorer and click **Add->Class** and add a **AudioManager.cs**. Then, change the **AudioManager** class to be static.
+
+	````C#
 	static class AudioManager
 	{
 	}
-```	
-2.  Add the following using clauses to the top of the AudioManager.cs file
-```csharp
+	````
+
+1.  Add the following using clauses to the top of the AudioManager.cs file.
+
+	````C#
 	using Microsoft.Xna.Framework.Audio;
 	using Microsoft.Xna.Framework.Media;
-```	
-3. Add the following Cue enumeration to the AudioManager class. This will let us tell the Manager which sound effect we want to play
-```csharp
+	````
+
+1. Add the following Cue enumeration to the AudioManager class. This will let us tell the Manager which sound effect we want to play.
+
+	````C#
 	public enum Cue
 	{
 		EnemyShot,
 		PlayerShot,
 		Explosion
 	};
-```
+	````
 
-4. Now we need to add the fields which we will store the sounds in. We will use Song for the music and SoundEffect for each of the game sounds we want to play. 
-```csharp
+
+1. Now we need to add the fields which we will store the sounds in. We will use Song for the music and SoundEffect for each of the game sounds we want to play. 
+
+	````C#
 	private static readonly Song _theme;
-        private static readonly SoundEffect _enemyShot;
-        private static readonly SoundEffect _playerShot;
-        private static readonly SoundEffect _explosion;
-```
+	private static readonly SoundEffect _enemyShot;
+	private static readonly SoundEffect _playerShot;
+	private static readonly SoundEffect _explosion;
+	````
 
-5. Next we will add a static constructor to load all the audio from the ContentManger. We'll use the Instance field of the Game to get access to the game instance then call the Content.Load methods for each sound.
-```csharp
+
+1. Next, we will add a static constructor to load all the audio from the ContentManger. We'll use the Instance field of the Game to get access to the game instance then call the Content.Load methods for each sound.
+
+	````C#
 	static AudioManager()
 	{
 		_theme = AlienAttackGame.Instance.Content.Load<Song>("sfx\\theme");           
@@ -727,10 +821,11 @@ Just like the InputManager the audio manager will be responsible for handling th
 		_playerShot = AlienAttackGame.Instance.Content.Load<SoundEffect>("sfx\\playerShot");
 		_explosion = AlienAttackGame.Instance.Content.Load<SoundEffect>("sfx\\explosion");
 	}
-```
+	````
 
-6. We now need a way to play the sounds. This is where the Cue enumeration comes in. We'll add a new method "PlayCue" which will take the Cue enum as a parameter. We can then use the swtich statement to play the correct sound.
-```csharp
+1. We now need a way to play the sounds. This is where the Cue enumeration comes in. We'll add a new method "PlayCue" which will take the Cue enum as a parameter. We can then use the swtich statement to play the correct sound.
+
+	````C#
 	public static void PlayCue(Cue cue)
 	{
 		// play the effect requested
@@ -747,20 +842,22 @@ Just like the InputManager the audio manager will be responsible for handling th
 				break;
 		}
 	}
-```
+	````
 
-7. Finally we need a couple of methods to start and stop the theme music. 
-```csharp
+
+1. Finally, we need a couple of methods to start and stop the theme music. 
+
+	````C#
 	public static void StartTheme()
-        {
-            MediaPlayer.IsRepeating = true;
-            MediaPlayer.Play(_theme);
-        }
-        public static void StopTheme()
-        {
-            MediaPlayer.Stop();
-        }
-```
+	{
+		MediaPlayer.IsRepeating = true;
+		MediaPlayer.Play(_theme);
+	}
+	public static void StopTheme()
+	{
+		MediaPlayer.Stop();
+	}
+	````
 
 This is it for the AudioManager. 
 
@@ -771,27 +868,32 @@ We now have allot of the basic plumbing in place we can start looking a implemen
 
 To animate our sprites we will use a array of Texture2D's to hold the Texture for each frame. Then just increment an index to change which frame is show. Once we get to the end of the array we will rest the index back to 0 and start again. This is an extremely simple way of animating sprites.
 
-1. In the solution explorer right click on the AlienAttackUniveral project and click Add->New Folder. Name this folder Sprites.
-2. Right click on the Sprites folder and click Add->Class. Call this class Sprite.cs 
-3. Add the following using clauses
-```csharp
+1. In the solution explorer right-click on the AlienAttackUniveral project and click **Add->New Folder**. Name this folder _Sprites_.
+
+1. Right-click on the Sprites folder and click **Add->Class**. Call this class _Sprite.cs_.
+
+1. Add the following using clauses.
+
+	````C#
 	using Microsoft.Xna.Framework;
 	using Microsoft.Xna.Framework.Content;
 	using Microsoft.Xna.Framework.Graphics;
-```
+	````
 
-4. First we'll add the properties we need. The first section will hold the information we need for holding and indexing the animations
-```csharp
+1. First we'll add the properties we need. The first section will hold the information we need for holding and indexing the animations.
+
+	````C#
 	// all textures in animation set
 	protected Texture2D[] Frames { get; set; }
 	// current frame to draw
 	protected int FrameIndex { get; set; }
 	// total number of frames
 	protected int FrameCount { get; set; }
-```
+	````
 
-5. Next we'll add some code which defines the position, size, velocity and Scale of the sprite. 
-```csharp
+1. Next, we'll add some code which defines the position, size, velocity and Scale of the sprite. 
+
+	````C#
 	// size of sprite
 	public Vector2 Size { get { return new Vector2(Width, Height); } }
 	public int Width { get; set; }
@@ -800,29 +902,30 @@ To animate our sprites we will use a array of Texture2D's to hold the Texture fo
 	public Vector2 Velocity { get; set; }
 	public float Rotation { get; set; }
 	public Vector2 Scale { get; set; }
-```
+	````
 
-6. Now we add a few additonal fields for keeping track of the elasped time for animating and the bounding box for handling collisions. The _animationDirection field will be used to left us reverse the direction of the animation.
-```csharp
+1. Now, we add a few additonal fields for keeping track of the elasped time for animating and the bounding box for handling collisions. The _animationDirection field will be used to left us reverse the direction of the animation.
+
+	````C#
 	// variable to track number of millieconds for animations
 	private double _time;
 	// bounding box of sprite...used for collisions
 	private Rectangle _boundingBox;
 	private int _animationDirection = 1;
-```
+	````
 
-7. We need a constructor to set the initial value for the Scale
-```csharp
+1. We need a constructor to set the initial value for the Scale.
+
+	````C#
 	public Sprite()
 	{
 		Scale = Vector2.One;
 	}
-```
+	````
 
-8. We need to be able to load textures for our sprite. Our animated graphics are stored on disk in the format	
- 		<name>_<frame>
-   So we need two LoadContent methods. One to load load a normal non animated sprite and one which will load a group of textures into the array.
-```csharp
+8. We need to be able to load textures for our sprite. Our animated graphics are stored on disk in the format `<name>_<frame>`. So we need two LoadContent methods. One to load load a normal non animated sprite and one which will load a group of textures into the array.
+
+	````C#
 	public virtual void LoadContent(ContentManager contentManager, string name)
 	{
 		// load single frame
@@ -842,11 +945,11 @@ To animate our sprites we will use a array of Texture2D's to hold the Texture fo
 		Width = Frames[0].Width;
 		Height = Frames[0].Height;
 	}
-```
+	````
 
-9. Next is a couple of methods we will use to animate the sprite. These will be called as part of the Update method and will take a GameTime so we can accurately track how much time has passed. It will also take a value defining how long a *frame* should last before switching to the next one.
+1. Next, is a couple of methods we will use to animate the sprite. These will be called as part of the Update method and will take a GameTime so we can accurately track how much time has passed. It will also take a value defining how long a *frame* should last before switching to the next one.
 
-```csharp
+	````C#
 	public virtual void AnimateLoop(GameTime gameTime, double frameTime)
 	{
 		// count number of milliseconds
@@ -876,32 +979,33 @@ To animate our sprites we will use a array of Texture2D's to hold the Texture fo
 			FrameIndex += _animationDirection;
 		}
 	}
-```
+	````
 
-10. Next up is the Update method. Again this will take a GameTime so we can move the player depending on how much time has elapsed since the last frame. If we just incrememted the position by Velocity each frame then the game would run faster on a faster PC than it does on a slower one. This is becaue the faster PC will be calling Update/Draw more often. This is one of the most important things to remember when writing games. You frame rate is not always going to be the same on everymachine.
+1. Next up is the Update method. Again this will take a GameTime so we can move the player depending on how much time has elapsed since the last frame. If we just incrememted the position by Velocity each frame then the game would run faster on a faster PC than it does on a slower one. This is becaue the faster PC will be calling Update/Draw more often. This is one of the most important things to remember when writing games. You frame rate is not always going to be the same on everymachine.
 
-```csharp
+	````C#
 	public virtual void Update(GameTime gameTime)
 	{
 		// move the sprite 1 velocity unit
 		Position += Velocity * gameTime.ElapsedGameTime.Milliseconds;
 	}
-```
+	````
 
-11. The draw method is really simple. We just use a passed in spritebatch to draw the current frame. If we don't have any frames we just exit out of the method.
-	
-```csharp
+1. The draw method is really simple. We just use a passed in spritebatch to draw the current frame. If we don't have any frames we just exit out of the method.
+
+	````C#
 	public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
 	{
 		if(Frames == null)
 			return;
 		spriteBatch.Draw(Frames[FrameIndex], position:Position, color:Color.White, scale:Scale);
 	}
-```
+	````
 
-12. Finally we need to expose the BoundingBox. Remembering that as the sprite moves location on the screen its bounding box location will change.
+
+1. Finally, we need to expose the BoundingBox. Remembering that as the sprite moves location on the screen its bounding box location will change.
 	
-```csharp
+	````C#
 	public virtual Rectangle BoundingBox
 	{
 		get 
@@ -917,7 +1021,8 @@ To animate our sprites we will use a array of Texture2D's to hold the Texture fo
 				return _boundingBox;
 		}
 	}
-```
+	````
+
 
 That is our sprite base class complete. We can now start adding our Player.
 
@@ -926,7 +1031,7 @@ That is our sprite base class complete. We can now start adding our Player.
 
 Because we now have a base class for our sprites adding new sprites is going to be very straighforward.
 
-1. Right click on the Sprites folder and click Add->Class. Call this class Player.cs 
+1. Right-click on the Sprites folder and click Add->Class. Call this class Player.cs 
 2. Change the Player so it derives from Sprite
 ```csharp
 	class Player : Sprite	
@@ -949,7 +1054,7 @@ That is it! All the other logic is handled in the Sprite class.
 
 We already added a TitleScreen to our project which derived from DrawableGameComponent. We need to do the same for the GameScreen
 
-1. Right click on the Screens folder and click Add->Class. Call this class GameScreen.cs
+1. Right-click on the Screens folder and click Add->Class. Call this class GameScreen.cs
 3. Add the following using clauses to the top of the TitleScreen.cs . These will import the required MonoGame namespaces
 ```csharp
 	using System.Collections.Generic;
@@ -1059,7 +1164,7 @@ You should see your spaceship at the bottom of the screen. And if you press Left
 
 Our next task is to get our ship to shoot. 
 
-1. Right click on the Sprites folder and click Add->Class. Call this class PlayerShot.cs 
+1. Right-click on the Sprites folder and click Add->Class. Call this class PlayerShot.cs 
 2. Change the PlayerShot so it derives from Sprite
 ```csharp
 	class PlayerShot : Sprite
@@ -1147,7 +1252,7 @@ Start the game and by hitting Space you should fire the weapon. Now we just need
 <a name="Ex1Task19" />
 #### Task 19 - Enemy ####
 
-1. Right click on the Sprites folder and click Add->Class. Call this class Enemy.cs 
+1. Right-click on the Sprites folder and click Add->Class. Call this class Enemy.cs 
 2. Add the following using clause
 ```csharp
 	using Microsoft.Xna.Framework;
@@ -1180,7 +1285,7 @@ That is it!
 <a name="Ex1Task20" />
 #### Task 20 - Enemy Shooting ####
 
-1. Right click on the Sprites folder and click Add->Class. Call this class EnemyShot.cs 
+1. Right-click on the Sprites folder and click Add->Class. Call this class EnemyShot.cs 
 2. Add the following using clause
 ```csharp
 	using Microsoft.Xna.Framework;
@@ -1212,7 +1317,7 @@ That is it!
 <a name="Ex1Task21" />
 #### Task 21 - The Explosions ####
 
-1. Right click on the Sprites folder and click Add->Class. Call this class Explosion.cs 
+1. Right-click on the Sprites folder and click Add->Class. Call this class Explosion.cs 
 2. Add the following using clause
 ```csharp
 	using Microsoft.Xna.Framework;
@@ -1250,7 +1355,7 @@ That is all the support classes for the Enemy done. We now need to add te logic 
 
 We want to display the enemies in a grouping. To do this we will need to create an array of EnemyShip objects and then move that array around the screen. We also have an Explosion array to keep track of explosions. As well as a few constants to define things like the number of enemies in the grid and how fast they move. 
 
-1. Right click on the Sprites folder and click Add->Class. Call this class EnemyGroup.cs 
+1. Right-click on the Sprites folder and click Add->Class. Call this class EnemyGroup.cs 
 2. Add the following using clauses
 ```csharp
 	using System;

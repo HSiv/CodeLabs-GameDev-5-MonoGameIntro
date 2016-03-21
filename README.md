@@ -234,27 +234,27 @@ Our next task is to get our ship to shoot.
 
 1. Open the **Task List** in **Visual Studio 2015** by selecting **View->TaskList**.
 
-1. Look for **Ex1Task6 - Step 1**. Double click on it and then uncomment the code.
+1. Look for **Ex1Task6 - Step 1**. Double click on it and then uncomment the code. This is our list in which we will place our PlayerShot instances.
 
 	````C#
 	private readonly List<PlayerShot> _playerShots;
 	````
 
-1. Look for **Ex1Task6 - Step 2**. Double click on it and then uncomment the code.
+1. Look for **Ex1Task6 - Step 2**. Double click on it and then uncomment the code so that we create the new *_playerShots* list.
  
 	````C#
 	_playerShots = new List<PlayerShot>();
 	````
 
-1. Look for **Ex1Task6 - Step 3**. Double click on it and then uncomment the code. This code is the entire **UpdatePlayerShots** method. you should see an error in the code. **AudioManager.Cue.PlayerShot** is not defined. We will get to that shortly.
+1. Look for **Ex1Task6 - Step 3**. Double click on it and then uncomment the code. This code is the entire **UpdatePlayerShots** method. you should see an error in the code. **AudioManager.Cue.PlayerShot** is not defined. We will get to that shortly. This is quite a large method. Its take is three fold. 1) Adding *shots* to the list. But only if an interval has passed. We don't want the player to fire so fast the game is easy. 2) Update the PlayerShot sprite so they move and 3) Remove any shots that are off the top of the screen.
 
-1. Look for **Ex1Task6 - Step 4**. Double click on it and then uncomment the code.
+1. Look for **Ex1Task6 - Step 4**. Double click on it and then uncomment the code. This just makes sure that we call the method we just uncommented.
 
 	````C#
 	UpdatePlayerShots(gameTime);
 	````
 
-1. Look for **Ex1Task6 - Step 5**. Double click on it and then uncomment the code.
+1. We have methods to Update the shots. We now need to draw them. In this case we just loop through the items in the array and call playerShot.Draw. Look for **Ex1Task6 - Step 5**. Double click on it and then uncomment the code.
 
 	````C#
 	// draw the player shots
@@ -274,13 +274,13 @@ Our next task is to get our ship to shoot.
 	private static readonly SoundEffect _playerShot;
 	````
 
-1. Look for **Ex1Task6 - Step 8**. Double click on it and then uncomment the code.
+1. Look for **Ex1Task6 - Step 8**. Double click on it and then uncomment the code. This makes use of the ContentManager we covered earlier. But this time we load a *SoundEffect*. 
 
 	````C#
 	_playerShot = AlienAttackGame.Instance.Content.Load<SoundEffect>("sfx\\playerShot");
 	````
 
-1. Look for **Ex1Task6 - Step 9**. Double click on it and then uncomment the code.
+1. Look for **Ex1Task6 - Step 9**. Double click on it and then uncomment the code. SoundEffect classes have a *Play* method on them. So playing a sound is as simple as just calling *.Play*.
 
 	````C#
 	case Cue.PlayerShot:

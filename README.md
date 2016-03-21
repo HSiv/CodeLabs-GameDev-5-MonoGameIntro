@@ -117,13 +117,13 @@ That is it! All the other logic is handled in the Sprite class. At this point yo
 
 	````C#
 	public virtual void LoadContent(ContentManager contentManager, string name)
-        {
+	{
             // load single frame
             Frames = new Texture2D[1];
             Frames[0] = contentManager.Load<Texture2D>(name);
             Width = Frames[0].Width;
             Height = Frames[0].Height;
-        }
+	}
 	````
 
 As you can see this method makes use of the *ContentManager* class to load the texture. The *ContentManager* is the main way to load any kind of asset which has been processed by the content Pipeline. An instance is created on the Game class and is accessable via the *.Content* property. You can see we pass in ```AlienAttackGame.Instance.Content``` into the LoadContent method. 

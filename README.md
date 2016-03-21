@@ -113,8 +113,22 @@ The project has a base class for our sprites adding new sprites is going to be v
 	}
 	````
 
-That is it! All the other logic is handled in the Sprite class. 
+That is it! All the other logic is handled in the Sprite class. At this point you should probabl take a look at the Sprite class. If we look at the *LoadContent* method you will see the following code.
 
+	````C#
+	public virtual void LoadContent(ContentManager contentManager, string name)
+        {
+            // load single frame
+            Frames = new Texture2D[1];
+            Frames[0] = contentManager.Load<Texture2D>(name);
+            Width = Frames[0].Width;
+            Height = Frames[0].Height;
+        }
+	````
+
+As you can see this method makes use of the *ContentManager* class to load the texture. The *ContentManager* is the main way to load any kind of asset which has been processed by the content Pipeline. An instance is created on the Game class and is accessable via the *.Content* property. You can see we pass in ```AlienAttackGame.Instance.Content``` into the LoadContent method. 
+
+The *ContentManager* provides a generic Load method for loading assets. You can use this to load *Texture2D*, *SpriteFont* and other content types. It includes type checking. So if you attempt to load a song into a Texture2D the manager will throw an error. 
 
 <a name="Ex1Task4" />
 #### Task 4 - Getting the Player Moving ####

@@ -299,11 +299,17 @@ So far we have moving aliens, moving players and lots of shooting, but not expli
 
 1. Open the **Task List** in **Visual Studio 2015** by selecting **View->TaskList**.
 
-1. Look for **Ex1Task7 - Step 1**. Double click on it and then uncomment the code. This is a large chunk of Collision handling code. The methods are HandlePlayerShotCollision, HandleEnemyShotCollision and HandleEnemyPlayerCollision.
+1. Look for **Ex1Task7 - Step 1**. Double click on it and then uncomment the code. This is a large chunk of Collision handling code. The methods are HandlePlayerShotCollision, HandleEnemyShotCollision and HandleEnemyPlayerCollision. *HandlePlayerShotCollision* loops through all the ememies in the group and checks to see if they collide with any player shot sprites. It does this by calling the CheckColision method. This method just checks for a *BoundingBox* intersection using.
 
-1. Look for **Ex1Task7 - Step 2**. Double click on it and then uncomment the code. Again this is a fair size chunk of collision code. 
+	```C#
+	sprite1.BoundingBox.Intersects(sprite2.BoundingBox); 
+	```
 
-1. Look for **Ex1Task7 - Step 3**. Double click on it and then uncomment the code. 
+*BoundingBox* is a build in MonoGame type. You can use it to easily detect if two boxes intersect with each other. Which makes it perfect for 2D collisions. The remaining methods *HandleEnemyShotCollision* and *HandleEnemyPlayerCollision* to the same thing. *HandleEnemyShotCollision* checks to see if an emeny shot has hit the player. The final method checks to see if an Emeny hits the player. We need this because the emenies slows move down the screen.
+
+1. Look for **Ex1Task7 - Step 2**. Double click on it and then uncomment the code. Again this is a fair size chunk of collision code. This code is reacting to collisons using the methods we just enabled. They principally involve creating an Explosion sprite and playing audio when a collision is detected. It is also responsible for incrementing the score.
+
+1. Look for **Ex1Task7 - Step 3**. Double click on it and then uncomment the code. This looks very familiar to code we added earlier. This is used to reset the player position if they are destroyed.
 
 	````C#
 	_playerShots.Clear();

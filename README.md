@@ -306,3 +306,14 @@ So far we have moving aliens, moving players and lots of shooting, but not expli
 1. Hit **F5** or click the Run **Local Machine** button.
 
 That should be everything. You now have a fully functioning game!
+
+<a name="Summary" />
+## Summary ##
+
+The MonoGame framework does not force you to do things in a particular way. As a result, there are many different ways to write a game. This module should have given you a grasp of:
+
+- Processing and Loading Content
+- Drawing Textures
+- Drawing Text
+- Playing Sound and Music.
+- Structuring you code so you can reuse functionality.

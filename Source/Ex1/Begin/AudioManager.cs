@@ -24,7 +24,7 @@ namespace AlienAttackUniversal
 			// load 'em up
 			_theme = AlienAttackGame.Instance.Content.Load<Song>("sfx\\theme");           
 			_enemyShot = AlienAttackGame.Instance.Content.Load<SoundEffect>("sfx\\enemyShot");
-			_playerShot = AlienAttackGame.Instance.Content.Load<SoundEffect>("sfx\\playerShot");
+			//_playerShot = AlienAttackGame.Instance.Content.Load<SoundEffect>("sfx\\playerShot");
 			_explosion = AlienAttackGame.Instance.Content.Load<SoundEffect>("sfx\\explosion");
 		}
 

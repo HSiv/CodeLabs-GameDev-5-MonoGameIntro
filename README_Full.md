@@ -853,6 +853,7 @@ Just like the InputManager the audio manager will be responsible for handling th
 		MediaPlayer.IsRepeating = true;
 		MediaPlayer.Play(_theme);
 	}
+
 	public static void StopTheme()
 	{
 		MediaPlayer.Stop();
@@ -1031,21 +1032,26 @@ That is our sprite base class complete. We can now start adding our Player.
 
 Because we now have a base class for our sprites adding new sprites is going to be very straighforward.
 
-1. Right-click on the Sprites folder and click Add->Class. Call this class Player.cs 
-2. Change the Player so it derives from Sprite
-```csharp
+1. Right-click on the **Sprites** folder and click **Add->Class**. Call this class **Player.cs**.
+
+
+1. Change the **Player** so it derives from **Sprite**.
+
+	````C#
 	class Player : Sprite	
 	{
 	}
-```
+	````
 
-3. We now need to load the textures for this spirte. So lets just add a constructor and call LoadContent in it.
-```csharp
+1. We now need to load the textures for this sprite. So lets just add a constructor and call LoadContent in it.
+
+	````C#
 	public Player()
 	{
 		LoadContent(AlienAttackGame.Instance.Content,  "gfx\\player\\player");
 	}
-```
+	````
+
 
 That is it! All the other logic is handled in the Sprite class. 
 
@@ -1054,289 +1060,333 @@ That is it! All the other logic is handled in the Sprite class.
 
 We already added a TitleScreen to our project which derived from DrawableGameComponent. We need to do the same for the GameScreen
 
-1. Right-click on the Screens folder and click Add->Class. Call this class GameScreen.cs
-3. Add the following using clauses to the top of the TitleScreen.cs . These will import the required MonoGame namespaces
-```csharp
+1. Right-click on the **Screens** folder and click **Add->Class**. Call this class **GameScreen.cs**.
+
+1. Add the following using clauses to the top of the **TitleScreen.cs**. These will import the required MonoGame namespaces.
+
+	````C#
 	using System.Collections.Generic;
 	using Microsoft.Xna.Framework;
 	using Microsoft.Xna.Framework.Graphics;
-```	
-4. Change the GameScreen class so it derives from DrawableGameComponent.
-```csharp
+	````
+
+
+1. Change the **GameScreen** class so it derives from **DrawableGameComponent**.
+
+	````C#
 	class GameScreen : DrawableGameComponent
-```	
+	````
 
-5. Add the following fields. We need a SpriteBatch to draw our graphics and field to hold our Player sprite.
 
-```csharp
+1. Add the following fields. We need a **SpriteBatch** to draw our graphics and field to hold our Player sprite.
+
+	````C#
 	private Player _player;
-        private readonly SpriteBatch _spriteBatch;
-```
+	private readonly SpriteBatch _spriteBatch;
+	````
 
-6. Add a constructor for the GameScreen like we did with the TitleScreen. Remember it needs the game class as a paremeter. In the constructor we willl create the spriteBatch, the player and start playing the music with the AudioManager.
-```csharp
+1. Add a constructor for the **GameScreen** like we did with the TitleScreen. Remember it needs the game class as a paremeter. In the constructor we will create the spriteBatch, the player and start playing the music with the AudioManager.
+
+	````C#
 	public GameScreen(Game game) : base(game)
-        {
-        	_spriteBatch = new SpriteBatch(game.GraphicsDevice);
-        	AudioManager.StartTheme();
-        	_player = new Player();
+	{
+		_spriteBatch = new SpriteBatch(game.GraphicsDevice);
+		AudioManager.StartTheme();
+		_player = new Player();
 		_player.Position = new Vector2(AlienAttackGame.ScreenWidth / 2 - _player.Width / 2, AlienAttackGame.ScreenHeight - 120);
-        }
-```
+	}
+	````
 
-7. Next Up is a method to move the player.  We will call this from the GameScreen Update method. We will set our default player velocity to zero so we don't move.. Then if we get any input we will change the Velocty so the player goes in the direction we want. We then call _player.Update to apply the Position += Velocity logic we added to the Sprite class.
+7. Next Up is a method to move the player. We will call this from the GameScreen Update method. We will set our default player velocity to zero so we don't move. Then if we get any input we will change the Velocty so the player goes in the direction we want. We then call _player.Update to apply the `Position += Velocity` logic we added to the Sprite class.
  
-```csharp
+	````C#
 	private void MovePlayer(GameTime gameTime)
-        {
-            if (_player != null)
-            {
-                _player.Velocity = Vector2.Zero;
-                // move left
-                if (InputManager.ControlState.Left && _player.Position.X > 0)
-                    _player.Velocity = new Vector2(-400 / 1000.0f, 0);
-                // move right
-                if (InputManager.ControlState.Right && _player.Position.X + _player.Width < AlienAttackGame.ScreenWidth)
-                    _player.Velocity = new Vector2(400 / 1000.0f, 0);
-                _player.Update(gameTime);
-            }
-        }
-```
+	{
+		if (_player != null)
+		{
+			 _player.Velocity = Vector2.Zero;
+			 // move left
+			 if (InputManager.ControlState.Left && _player.Position.X > 0)
+				  _player.Velocity = new Vector2(-400 / 1000.0f, 0);
+			 // move right
+			 if (InputManager.ControlState.Right && _player.Position.X + _player.Width < AlienAttackGame.ScreenWidth)
+				  _player.Velocity = new Vector2(400 / 1000.0f, 0);
+			 _player.Update(gameTime);
+		}
+	}
+	````
 
-8. Now add the Update method override which will call MovePlayer
-```csharp
+1. Now add the **Update** method override which will call MovePlayer.
+
+	````C#
 	public override void Update(GameTime gameTime)
-        {
-            MovePlayer(gameTime);
-        }
-```
+	{
+		MovePlayer(gameTime);
+	}
+	````
 
-9. Now Add our Draw method 
-```csharp
+1. Now add our **Draw** method.
+
+	````C#
 	public override void Draw(GameTime gameTime)
-        {
-            _spriteBatch.Begin();
-            // draw the player
-            if (_player != null)
-                _player.Draw(gameTime, _spriteBatch);
-            _spriteBatch.End();
-        }
-```
+	{
+		_spriteBatch.Begin();
+		// draw the player
+		if (_player != null)
+			 _player.Draw(gameTime, _spriteBatch);
+		_spriteBatch.End();
+	}
+	````
 
-10. If you ran the game now you would still be stuck on the title screen. We need to hook up the GameState changes. Open AlienAttackUniversal.cs and find the Update method then add above the call to _screen.Update.
-```csharp
+1. If you ran the game now you would still be stuck on the title screen. We need to hook up the GameState changes. Open **AlienAttackUniversal.cs** and find the **Update** method then add above the call to _screen.Update.
+
+	````C#
 	InputManager.Update();
-```	
-        
-11. Go to the SetState method and change it so that we create the GameScreen
- 
-```csharp
-	public void SetState(GameState newState)
-        {
-            switch (newState)
-            {
-                case GameState.TitleScreen:
-                    _screen = new TitleScreen(this);
-                    break;
-                case GameState.GameScreen:
-                    _screen = new GameScreen(this);
-                    break;
-            }
-        }
-```
+	````
 
-12. Finally Open up the TitleScreen and add the following Update override method. This will check for input and then call the SetState method.
+1. Go to the SetState method and change it so that we create the **GameScreen**.
  
-```csharp
+	````C#
+	public void SetState(GameState newState)
+	{
+		switch (newState)
+		{
+			 case GameState.TitleScreen:
+				  _screen = new TitleScreen(this);
+				  break;
+			 case GameState.GameScreen:
+				  _screen = new GameScreen(this);
+				  break;
+		}
+	}
+	````
+
+1. Finally, open up **TitleScreen** and add the following **Update** override method. This will check for input and then call the **SetState** method.
+ 
+	````C#
 	public override void Update(GameTime gameTime)
 	{
 		if(InputManager.ControlState.Start)
 			AlienAttackGame.Instance.SetState(GameState.GameScreen);
 	}
-```
+	````
 
-13. Hit F5 or click the Run "Local Machine" button.
+1. Hit **F5** or click the Run **Local Machine** button.
  
-You should see your spaceship at the bottom of the screen. And if you press Left/Right arrow it should move. 
+You should see your spaceship at the bottom of the screen. And if you press **Left/Right** arrow it should move.
 
 <a name="Ex1Task18" />
 #### Task 18 - Shooting ####
 
 Our next task is to get our ship to shoot. 
 
-1. Right-click on the Sprites folder and click Add->Class. Call this class PlayerShot.cs 
-2. Change the PlayerShot so it derives from Sprite
-```csharp
+1. Right-click on the **Sprites** folder and click **Add->Class**. Call this class **PlayerShot.cs**.
+
+1. Change the **PlayerShot** so it derives from **Sprite**.
+
+	````C#
 	class PlayerShot : Sprite
-```
+	````
 
-3. Add the following using clause
-```csharp
+1. Add the following using clause.
+
+	````C#
 	using Microsoft.Xna.Framework;
-```	
+	````
 
-4. We now need to load the textures for this spirte. So lets just add a constructor and call LoadContent in it. We also need to set the Velocity for this sprite. Note we are using an animated sprite this time, there are 3 frames availalbe pshot_0, pshot_1 and pshot_2
-```csharp
+1. We now need to load the textures for this spirte. So lets just add a constructor and call LoadContent in it. We also need to set the Velocity for this sprite. Note we are using an animated sprite this time, there are 3 frames availalbe pshot_0, pshot_1 and pshot_2.
+
+	````C#
 	public PlayerShot()
 	{
 		LoadContent(AlienAttackGame.Instance.Content, "gfx\\pshot\\pshot_{0}", 3);
 		Velocity = new Vector2(0, -300 / 1000.0f);
 	}
-```		
+	````
 
-5. We also need to override the Update method. This will let use update the animation for this sprite.
-```csharp
+1. We also need to override the **Update** method. This will let use update the animation for this sprite.
+
+	````C#
 	public override void Update(GameTime gameTime)
 	{
 		base.Update(gameTime);
 		AnimateReverse(gameTime, 100);
 	}
-```
-6. Now go back to the GameScreen.cs. We need to add a list to hold the instances of PlayerShot. We need a list because no one likes a gun that only has one bullet :) We also need a field in which to store the last game time what we fired a bullet. This is so that there is a delay between shots. 
-```csharp
+	````
+
+1. Now go back to the **GameScreen.cs**. We need to add a list to hold the instances of PlayerShot. We need a list because no one likes a gun that only has one bullet :) We also need a field in which to store the last game time what we fired a bullet. This is so that there is a delay between shots.
+
+	````C#
 	private readonly List<PlayerShot> _playerShots;
 	private double _lastTime;
-```
-7. In the GameScreen constructor create a new instalce of _playerShots
-```csharp
+	````
+
+1. In the **GameScreen** constructor create a new instalce of _playerShots.
+
+	````C#
 	 _playerShots = new List<PlayerShot>();
-```
-8. Now we add a UpdatePlayerShots method. You can see in the code below that we only fire a bullet every 500 milliseconds. We also make use of the AudioManager to play the "PlayerShot" sound. This method also makes sure we update ALL the shots on the screen and remove the ones that have made it off the top of the screen.
-```csharp
+	````
+
+1. Now, we add a **UpdatePlayerShots** method. You can see in the code below that we only fire a bullet every 500 milliseconds. We also make use of the AudioManager to play the "PlayerShot" sound. This method also makes sure we update ALL the shots on the screen and remove the ones that have made it off the top of the screen.
+
+	````C#
 	private void UpdatePlayerShots(GameTime gameTime)
-        {
-            // if we are allowed to fire, add a shot to the list
-            if (_player != null && InputManager.ControlState.Fire && gameTime.TotalGameTime.TotalMilliseconds - _lastTime > 500)
-            {
-                // create a new shot over the ship
-                PlayerShot ps = new PlayerShot();
-                ps.Position = new Vector2((_player.Position.X + _player.Width / 2.0f) - ps.Width / 2.0f, _player.Position.Y - ps.Height);
-                _playerShots.Add(ps);
-                _lastTime = gameTime.TotalGameTime.TotalMilliseconds;
-                AudioManager.PlayCue(AudioManager.Cue.PlayerShot);
-            }
+	{
+		// if we are allowed to fire, add a shot to the list
+		if (_player != null && InputManager.ControlState.Fire && gameTime.TotalGameTime.TotalMilliseconds - _lastTime > 500)
+		{
+			 // create a new shot over the ship
+			 PlayerShot ps = new PlayerShot();
+			 ps.Position = new Vector2((_player.Position.X + _player.Width / 2.0f) - ps.Width / 2.0f, _player.Position.Y - ps.Height);
+			 _playerShots.Add(ps);
+			 _lastTime = gameTime.TotalGameTime.TotalMilliseconds;
+			 AudioManager.PlayCue(AudioManager.Cue.PlayerShot);
+		}
 
-            // enumerate the player shots on the screen
-            for (int i = 0; i < _playerShots.Count; i++)
-            {
-                PlayerShot playerShot = _playerShots[i];
+		// enumerate the player shots on the screen
+		for (int i = 0; i < _playerShots.Count; i++)
+		{
+			 PlayerShot playerShot = _playerShots[i];
 
-                playerShot.Update(gameTime);
+			 playerShot.Update(gameTime);
 
-                // if it's off the top of the screen, remove it from the list
-                if (playerShot.Position.Y + playerShot.Height < 0)
-                    _playerShots.RemoveAt(i);
-            }
-        }
-```
+			 // if it's off the top of the screen, remove it from the list
+			 if (playerShot.Position.Y + playerShot.Height < 0)
+				  _playerShots.RemoveAt(i);
+		}
+	}
+	````
 
-9. We also need to call UpdatePlayerShots in the Update method of GameScreen. Your update method should look lile the following
-```csharp
+1. We also need to call **UpdatePlayerShots** in the **Update** method of **GameScreen**. Your update method should look lile the following.
+
+	````C#
 	public override void Update(GameTime gameTime)
-        {
-            MovePlayer(gameTime);
-            UpdatePlayerShots(gameTime);
-        }
-```
+	{
+		MovePlayer(gameTime);
+		UpdatePlayerShots(gameTime);
+	}
+	````
 
-10. Finally we need to draw all of the shots. Add the following to the GameScreen Draw call. Remember order is important. Since the shots would normally come out from underneath the ship we shoild draw the shots first.
-```csharp
+1. Finally, we need to draw all of the shots. Add the following to the GameScreen Draw call. Remember order is important. Since the shots would normally come out from underneath the ship we shoild draw the shots first.
+
+	````C#
 	foreach(PlayerShot playerShot in _playerShots)
 		playerShot.Draw(gameTime, _spriteBatch);
-```
+	````
 
-11.  Hit F5 or click the Run "Local Machine" button.
+1.  Hit **F5** or click the Run **Local Machine** button.
 
 Start the game and by hitting Space you should fire the weapon. Now we just need something to shoot at!
 
 <a name="Ex1Task19" />
 #### Task 19 - Enemy ####
 
-1. Right-click on the Sprites folder and click Add->Class. Call this class Enemy.cs 
-2. Add the following using clause
-```csharp
+1. Right-click on the **Sprites** folder and click **Add->Class**. Call this class **Enemy.cs**.
+
+1. Add the following using clause.
+
+	````C#
 	using Microsoft.Xna.Framework;
-```
-3. Change the Enemy so it derives from Sprite
-```csharp
+	````
+
+1. Change the **Enemy** so it derives from **Sprite**
+
+	````C#
 	class Enemy : Sprite	
 	{
 	}
-```
+	````
 
-4. We now need to load the textures for this spirte. So lets just add a constructor and call LoadContent in it.
-```csharp
+1. We now need to load the textures for this spirte. So lets just add a constructor and call LoadContent in it.
+
+	````C#
 	public Enemy()
 	{
 		LoadContent(AlienAttackGame.Instance.Content, "gfx\\enemy1\\enemy1_{0}", 10);
 	}
-```
+	````
 
-5. Because our Enemy is animated we need to call the AnimateReverse method in the Update
-```csharp
+1. Because our Enemy is animated we need to call the AnimateReverse method in the **Update**.
+
+	````C#
 	public override void Update(GameTime gameTime)
-        {
-            AnimateReverse(gameTime, 60);
-        }
-```        
+	{
+		AnimateReverse(gameTime, 60);
+	}
+	```` 
 
 That is it! 
 
 <a name="Ex1Task20" />
 #### Task 20 - Enemy Shooting ####
 
-1. Right-click on the Sprites folder and click Add->Class. Call this class EnemyShot.cs 
-2. Add the following using clause
-```csharp
+1. Right-click on the **Sprites** folder and click **Add->Class**. Call this class **EnemyShot.cs**. 
+
+1. Add the following using clause.
+
+	````C#
 	using Microsoft.Xna.Framework;
-```
-3. Change the EnemyShot so it derives from Sprite
-```csharp
+	````
+
+1. Change the **EnemyShot** so it derives from **Sprite**.
+
+	````C#
 	class EnemyShot : Sprite	
 	{
 	}
-```
-4.  We now need to load the textures for this spirte. So lets just add a constructor and call LoadContent in it. We also want to set the Velocity for the bullet.
-```csharp
+	````
+
+1.  We now need to load the textures for this sprite. So lets just add a constructor and call **LoadContent** in it. We also want to set the Velocity for the bullet.
+
+	````C#
 	public EnemyShot()
 	{
 		LoadContent(AlienAttackGame.Instance.Content, "gfx\\eshot\\eshot_{0}", 3);
 		Velocity = new Vector2(0, 350 / 1000.0f);
 	}
-```
-5. We also need to add an Update override to handle the animation.
-```csharp
+	````
+
+1. We also need to add an **Update** override to handle the animation.
+
+	````C#
 	public override void Update(GameTime gameTime)
 	{
 		base.Update(gameTime);
 		AnimateReverse(gameTime, 60);
 	}
-```
-
+	````
 
 <a name="Ex1Task21" />
 #### Task 21 - The Explosions ####
 
-1. Right-click on the Sprites folder and click Add->Class. Call this class Explosion.cs 
-2. Add the following using clause
-```csharp
+1. Right-click on the **Sprites** folder and click **Add->Class**. Call this class **Explosion.cs**.
+
+1. Add the following using clause.
+
+	````C#
 	using Microsoft.Xna.Framework;
-```
-3. Change the Explosion so it derives from Sprite
-```csharp
+	````
+
+1. Change the **Explosion** so it derives from **Sprite**.
+
+	````C#
 	class Explosion : Sprite	
 	{
 	}
-```
-4.  We now need to load the textures for this spirte. So lets just add a constructor and call LoadContent in it. 
-```csharp
+	````
+
+1.  We now need to load the textures for this sprite. So lets just add a constructor and call LoadContent in it. 
+
+	````C#
 	public Explosion()
 	{
 		LoadContent(AlienAttackGame.Instance.Content, "gfx\\explosion\\explosion_{0}", 9);
 	}
-```
-5. We also need to add an Update override to handle the animation. Note we really don't want the explosion to repeat so if we are on the final frame, we will just exit. 
-```csharp
+	````
+
+1. We also need to add an **Update** override to handle the animation. Note we really don't want the explosion to repeat so if we are on the final frame, we will just exit.
+
+	````C#
 	public new bool Update(GameTime gameTime)
 	{
 		// if it's the final frame, return true to let the other side know we're done
@@ -1346,7 +1396,7 @@ That is it!
 
 		return false;
 	}
-```
+	````
 
 That is all the support classes for the Enemy done. We now need to add te logic which will make them move like they do in space invaders.
 
@@ -1355,23 +1405,28 @@ That is all the support classes for the Enemy done. We now need to add te logic 
 
 We want to display the enemies in a grouping. To do this we will need to create an array of EnemyShip objects and then move that array around the screen. We also have an Explosion array to keep track of explosions. As well as a few constants to define things like the number of enemies in the grid and how fast they move. 
 
-1. Right-click on the Sprites folder and click Add->Class. Call this class EnemyGroup.cs 
-2. Add the following using clauses
-```csharp
+1. Right-click on the **Sprites** folder and click **Add->Class**. Call this class **EnemyGroup.cs**.
+
+1. Add the following using clauses.
+
+	````C#
 	using System;
 	using System.Collections.Generic;
 	using Microsoft.Xna.Framework;
 	using Microsoft.Xna.Framework.Graphics;
-```
-3. Change the EnemyGroup so it derives from Sprite
-```csharp
+	````
+
+1. Change the **EnemyGroup** so it derives from **Sprite**.
+
+	````C#
 	class EnemyGroup : Sprite	
 	{
 	}
-```
+	````
 
-4. We need to add allot of fields. These will be used to keep track of the enemies
-```csharp
+1. We need to add allot of fields. These will be used to keep track of the enemies.
+
+	````C#
 	// grid of enemies
 	private readonly Enemy[,] _enemies;
 	// all enemy shots
@@ -1389,78 +1444,88 @@ We want to display the enemies in a grouping. To do this we will need to create 
 	private const int ScreenEdge = 20;	// virtual edge of screen to change direction
 	private Vector2 EnemySpacing = new Vector2(16, 32);	// space between sprites
 	private readonly Vector2 EnemyVelocity = new Vector2(100 / 1000.0f, 0);	// speed at which grid moves per frame
-```
-5. Next add a constructor to initialize all of the Lists and the Array of Enemies.
-```csharp
+	````
+
+1. Next, add a constructor to initialize all of the Lists and the Array of Enemies.
+
+	````C#
 	public EnemyGroup()
-        {
-            _random = new Random();
-            _enemyShots = new List<EnemyShot>();
-            _explosions = new List<Explosion>();
-            _enemies = new Enemy[EnemyRows, EnemyCols];
-            // create a grid of enemies
-            for (int y = 0; y < EnemyRows; y++)
-            {
-                for (int x = 0; x < EnemyCols; x++)
-                {
-                    Enemy enemy = new Enemy();
-                    enemy.Position = new Vector2(x * enemy.Width + EnemySpacing.X, y * enemy.Height + EnemySpacing.Y);
-                    _enemies[y, x] = enemy;
-                }
-            }
-            _enemyWidth = _enemies[0, 0].Width;
-            // position the grid centered at the vertical position specified above
-            Position = new Vector2(AlienAttackGame.ScreenWidth / 2.0f - ((EnemyCols * (_enemyWidth + EnemySpacing.X)) / 2), EnemyStartPosition);
-            Velocity = EnemyVelocity;
-        }
-```
-6. Add a new method to Clear all the enemy shots
-```csharp
+	{
+		_random = new Random();
+		_enemyShots = new List<EnemyShot>();
+		_explosions = new List<Explosion>();
+		_enemies = new Enemy[EnemyRows, EnemyCols];
+		// create a grid of enemies
+		for (int y = 0; y < EnemyRows; y++)
+		{
+			 for (int x = 0; x < EnemyCols; x++)
+			 {
+				  Enemy enemy = new Enemy();
+				  enemy.Position = new Vector2(x * enemy.Width + EnemySpacing.X, y * enemy.Height + EnemySpacing.Y);
+				  _enemies[y, x] = enemy;
+			 }
+		}
+		_enemyWidth = _enemies[0, 0].Width;
+		// position the grid centered at the vertical position specified above
+		Position = new Vector2(AlienAttackGame.ScreenWidth / 2.0f - ((EnemyCols * (_enemyWidth + EnemySpacing.X)) / 2), EnemyStartPosition);
+		Velocity = EnemyVelocity;
+	}
+	````
+
+1. Add a new method to clear all the enemy shots.
+
+	````C#
 	public void Reset()
 	{
 		_enemyShots.Clear();
 	}
-```
-7. We need two methods to find the right most and left most enemy. This will be used to figure out if they have hit the edge of the screen. If we do hit the edge of the screen we need to reverse the group direction
-```csharp
-	private Enemy FindRightMostEnemy()
-        {
-            // find the enemy in the right-most position in the grid
-            for (int x = EnemyCols - 1; x > -1; x--)
-            {
-                for (int y = 0; y < EnemyRows; y++)
-                {
-                    if (_enemies[y, x] != null)
-                        return _enemies[y, x];
-                }
-            }
-            return null;
-        }
+	````
 
-        private Enemy FindLeftMostEnemy()
-        {
-            // find the enemy in the left-most position in the grid
-            for (int x = 0; x < EnemyCols; x++)
-            {
-                for (int y = 0; y < EnemyRows; y++)
-                {
-                    if (_enemies[y, x] != null)
-                        return _enemies[y, x];
-                }
-            }
-            return null;
-        }
-```
-8. We need a method to check if the player has killed all the the enemies. Do to this we can just check to see if we have any enemies left. We will get setting the *cell* where the enemy is to null if it has been destroyed.
-```csharp 
+1. We need two methods to find the right most and left most enemy. This will be used to figure out if they have hit the edge of the screen. If we do hit the edge of the screen we need to reverse the group direction.
+
+	````C#
+	private Enemy FindRightMostEnemy()
+	{
+		// find the enemy in the right-most position in the grid
+		for (int x = EnemyCols - 1; x > -1; x--)
+		{
+			 for (int y = 0; y < EnemyRows; y++)
+			 {
+				  if (_enemies[y, x] != null)
+						return _enemies[y, x];
+			 }
+		}
+		return null;
+	}
+
+	private Enemy FindLeftMostEnemy()
+	{
+		// find the enemy in the left-most position in the grid
+		for (int x = 0; x < EnemyCols; x++)
+		{
+			 for (int y = 0; y < EnemyRows; y++)
+			 {
+				  if (_enemies[y, x] != null)
+						return _enemies[y, x];
+			 }
+		}
+		return null;
+	}
+	````
+
+1. We need a method to check if the player has killed all the the enemies. Do to this we can just check to see if we have any enemies left. We will get setting the _cell_ where the enemy is to null if it has been destroyed.
+
+	````C#
 	public bool AllDestroyed()
 	{
 		// we won if we can't find any enemies at all
 		return (FindLeftMostEnemy() == null);
 	}
-```
-9. This next method deals with movig the group. Take a moment to read through the code. It deals with the cases where the left/right most sprite hits the edge of the screen. In which cae we just rever directions and drops the whole group down. It also updates all the sprites.
-```csharp
+	````
+
+1. This next method deals with movig the group. Take a moment to read through the code. It deals with the cases where the left/right most sprite hits the edge of the screen. In which cae we just rever directions and drops the whole group down. It also updates all the sprites.
+
+	````C#
 	private void MoveEnemies(GameTime gameTime)
 	{
 		Enemy enemy = FindRightMostEnemy();
@@ -1500,57 +1565,63 @@ We want to display the enemies in a grouping. To do this we will need to create 
 			}
 		}
 	}
-```
-10. The next block of code will cause the ships to fire. We make use of a Random value to decide if we need to shoot or not. Once we know we need to shoot we use the Random value again to pick the ship that will shot. Then we add the new EnemyShot instance to the list and play the Audio Cue. We also go through all the current shots in play and Update them. If they are beyond the bottom of the screen we remove them from the list.
-```csharp
+	````
+
+1. The next block of code will cause the ships to fire. We make use of a Random value to decide if we need to shoot or not. Once we know we need to shoot we use the Random value again to pick the ship that will shot. Then we add the new EnemyShot instance to the list and play the Audio Cue. We also go through all the current shots in play and update them. If they are beyond the bottom of the screen we remove them from the list.
+
+	````C#
 	private void EnemyFire(GameTime gameTime)
-        {
-            if (AllDestroyed())
-                return;
+	{
+		if (AllDestroyed())
+			 return;
 
-            // at random times, drop an enemy shot
-            if (_random.NextDouble() > 0.99f)
-            {
-                int x, y;
+		// at random times, drop an enemy shot
+		if (_random.NextDouble() > 0.99f)
+		{
+			 int x, y;
 
-                // find an enemy that hasn't been destroyed
-                do
-                {
-                    x = (int)(_random.NextDouble() * EnemyCols);
-                    y = (int)(_random.NextDouble() * EnemyRows);
-                }
-                while (_enemies[y, x] == null);
+			 // find an enemy that hasn't been destroyed
+			 do
+			 {
+				  x = (int)(_random.NextDouble() * EnemyCols);
+				  y = (int)(_random.NextDouble() * EnemyRows);
+			 }
+			 while (_enemies[y, x] == null);
 
-                // create a shot for that enemy and add it to the list
-                EnemyShot enemyShot = new EnemyShot();
-                enemyShot.Position = _enemies[y, x].Position;
-                enemyShot.Position += new Vector2(0, _enemies[y, x].Height);
-                _enemyShots.Add(enemyShot);
+			 // create a shot for that enemy and add it to the list
+			 EnemyShot enemyShot = new EnemyShot();
+			 enemyShot.Position = _enemies[y, x].Position;
+			 enemyShot.Position += new Vector2(0, _enemies[y, x].Height);
+			 _enemyShots.Add(enemyShot);
 
-                AudioManager.PlayCue(AudioManager.Cue.EnemyShot);
-            }
+			 AudioManager.PlayCue(AudioManager.Cue.EnemyShot);
+		}
 
-            for (int i = 0; i < _enemyShots.Count; i++)
-            {
-                // update all shots
-                _enemyShots[i].Update(gameTime);
+		for (int i = 0; i < _enemyShots.Count; i++)
+		{
+			 // update all shots
+			 _enemyShots[i].Update(gameTime);
 
-                // remove those that are off the screen
-                if (_enemyShots[i].Position.Y > AlienAttackGame.ScreenHeight)
-                    _enemyShots.RemoveAt(i);
-            }
-        }    
-```
-11. The next small method is a helper function. It checks to see if two sprites are collising. It returns true if they are false otherwise,
-```csharp
+			 // remove those that are off the screen
+			 if (_enemyShots[i].Position.Y > AlienAttackGame.ScreenHeight)
+				  _enemyShots.RemoveAt(i);
+		}
+	}    
+	````
+
+1. The next small method is a helper function. It checks to see if two sprites are collising. It returns true if they are false otherwise.
+
+	````C#
 	public bool CheckCollision(Sprite s1, Sprite s2)
         {
             // simple bounding box collision detection
             return s1.BoundingBox.Intersects(s2.BoundingBox);
         }
-```
-12. The next few blocks of code handle collision. The logic is similar for each function. Loop through the items , check for a Collision and if there is create an explosion.
-```csharp
+	````
+
+1. The next few blocks of code handle collision. The logic is similar for each function. Loop through the items, check for a Collision and if there is create an explosion.
+
+	````C#
 	public bool HandlePlayerShotCollision(PlayerShot playerShot)
 	{
 		for(int y = 0; y < EnemyRows; y++)
@@ -1606,9 +1677,11 @@ We want to display the enemies in a grouping. To do this we will need to create 
 		}
 		return false;
 	}
-```
-13. We now need to add the Update method overide to call our MoveEnemies and EmemyFire methods. We also need to update any explosions we have. Remember that if the Explosion Update method returned true, it was becaus it had finished. In which case we need to remove it from the list. 
-```csharp
+	````
+
+1. We now need to add the Update method overide to call our MoveEnemies and EmemyFire methods. We also need to update any explosions we have. Remember that if the Explosion Update method returned true, it was becaus it had finished. In which case we need to remove it from the list. 
+
+	````C#
 	public override void Update(GameTime gameTime)
 	{
 		base.Update(gameTime);
@@ -1623,9 +1696,11 @@ We want to display the enemies in a grouping. To do this we will need to create 
 				_explosions.RemoveAt(i);
 		}
 	}
-```
-14. Finally we need to draw our Enemies. Add the following Draw method. We just loop through the enemies, shots and explosions and draw them all. 
-```csharp
+	````
+
+1. Finally, we need to draw our Enemies. Add the following **Draw** method. We just loop through the enemies, shots and explosions and draw them all.
+
+	````C#
 	public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
 	{
 		// draw all active enemies
@@ -1643,15 +1718,16 @@ We want to display the enemies in a grouping. To do this we will need to create 
 		foreach(Explosion explosion in _explosions)
 			explosion.Draw(gameTime, spriteBatch);
 	}
-```
+	````
 
 <a name="Ex1Task22" />
 #### Task 22 - The Explosive Finale ####
 
-Our final task is to update the GameScreen to use all of these new Enemy Classes and make this into a game. 
+Our final task is to update the **GameScreen** to use all of these new **Enemy** classes and make this into a game. 
 
-1. Open the GameScreen.cs class and add the following field definitions. Note we have an EnemyGroup field.
-```csharp
+1. Open the **GameScreen.cs** class and add the following field definitions. Note we have an EnemyGroup field.
+
+	````C#
  	private readonly Player _livesIcon;
 	private Explosion _playerExplosion;
 	private readonly Texture2D _bgScreen;
@@ -1662,9 +1738,11 @@ Our final task is to update the GameScreen to use all of these new Enemy Classes
 	private int _lives;
 	private double _backToMenuTime;
 	private bool _loseGame;
-```
-2. We now need to update the constructor to initialise this new fields. Add the following code after the current code in the constructor
-```csharp
+	````
+
+1. We now need to update the constructor to initialise this new fields. Add the following code after the current code in the constructor.
+
+	````C#
 	_font = game.Content.Load<SpriteFont>("font");
 	// draw a lives status icon in the lower left
 	_livesIcon = new Player();
@@ -1675,9 +1753,11 @@ Our final task is to update the GameScreen to use all of these new Enemy Classes
 	_livesIcon.Scale = new Vector2(0.5f, 0.5f);
 	_enemyGroup = new EnemyGroup();
 	_lives = 2;
-```
-3. Next we need to add a method to handle all of the collision detection. This will call into the _enemyGroup collision methods we added earlier.
-```csharp
+	````
+
+1. Next, we need to add a method to handle all of the collision detection. This will call into the _enemyGroup collision methods we added earlier.
+
+	````C#
 	private void HandleCollisions(GameTime gameTime)
 	{
 		// see if a player shot hit an enemy
@@ -1738,9 +1818,11 @@ Our final task is to update the GameScreen to use all of these new Enemy Classes
 			}
 		}
 	}
-```
-4. With all this new code we need to update the Update method. Currently is just updates the player. We now need it to Update the enemyGroup and call HandleCollisions as well as check for the game over condition. Replace the entire Update method in GameScreen with the following
-```csharp
+	````
+
+1. With all this new code we need to update the Update method. Currently is just updates the player. We now need it to Update the enemyGroup and call HandleCollisions as well as check for the game over condition. Replace the entire **Update** method in **GameScreen** with the following.
+
+	````C#
 	public override void Update(GameTime gameTime)
 	{
 		if(_enemyGroup.AllDestroyed() || _loseGame)
@@ -1767,9 +1849,11 @@ Our final task is to update the GameScreen to use all of these new Enemy Classes
 
 		HandleCollisions(gameTime);			
 	}
-```
-5. Our final update is to the draw method. We now need to change it to Draw not only the player, but the EnemyGroup. We also draw the Scrore, Game over Text and the player lives. If you take a look through the code it should be fairly easy to follow. Replace the entire Draw method in GameScreen with the following.
-```csharp
+	````
+
+1. Our final update is to the draw method. We now need to change it to Draw not only the player, but the EnemyGroup. We also draw the Score, Game over Text and the player lives. If you take a look through the code it should be fairly easy to follow. Replace the entire **Draw** method in **GameScreen** with the following.
+
+	````C#
 	public override void Draw(GameTime gameTime)
 	{
 		_spriteBatch.Begin();
@@ -1814,19 +1898,15 @@ Our final task is to update the GameScreen to use all of these new Enemy Classes
 
 		_spriteBatch.End();
 	}
-```
+	````
 
 <a name="Summary" />
 ## Summary ##
 
 The MonoGame framework does not force you to do things in a particular way. As a result there are many different ways to write a game. This module should have given you an grasp of 
 
-1. Processing and Loading Content
-2. Drawing Textures
-3. Drawing Text
-4. Playing Sound and Music.
-5. Structuring you code so you can reuse functionality.
-
-- Foo
-
-> **Note:** You can take advantage of the [Visual Studio Dev Essentials]( https://www.visualstudio.com/en-us/products/visual-studio-dev-essentials-vs.aspx) subscription in order to get everything you need to build and deploy your app on any platform.
+- Processing and Loading Content
+- Drawing Textures
+- Drawing Text
+- Playing Sound and Music.
+- Structuring you code so you can reuse functionality.

@@ -137,26 +137,26 @@ This task will involve uncommenting some existing code. In this section we will 
 
 1. Open the Task List in **Visual Studio 2015**. **View->TaskList**.
 
-1. Look for **Ex1Task4 - Step 1** Double click on it and then uncomment the code 
+1. Look for **Ex1Task4 - Step 1** Double click on it and then uncomment the code. The delcares our player field in the GameScreen.cs
 
 	````C#
 	private Player _player;
 	````
 
-1. Go to **Ext1Task4 - Step 2** and uncomment the code.
+1. Next we need to declare a field for the health/lives icon. In this case we re-use the Player sprite. Go to **Ext1Task4 - Step 2** and uncomment the code.
 
 	````C#
 	private readonly Player _livesIcon;
 	````
 
-1. Go to **Ext1Task4 - Step 3** and uncomment the code.
+1. Go to **Ext1Task4 - Step 3** and uncomment the code. As you can see we create a new instance of *Player*. Then set the players initaial position in the center of the screen.
 
 	````C#
 	_player = new Player();
 	_player.Position = new Vector2(AlienAttackGame.ScreenWidth / 2 - _player.Width / 2, AlienAttackGame.ScreenHeight - 120);
 	````
 
-1. Go to **Ext1Task4 - Step 4** and uncomment the code.
+1. Go to **Ext1Task4 - Step 4** and uncomment the code. This creates the health icon and positions it at the bottom left of the screen. Also note we set the Sprite.Scale property so its scales by 1/2. That way it is not the same size as the main player sprite.
 
 	````C#
 	_livesIcon = new Player();
@@ -178,7 +178,7 @@ This task will involve uncommenting some existing code. In this section we will 
 	MovePlayer(gameTime);
 	````
 
-1. Go to **Ext1Task4 - Step 7** and uncomment the code.
+1. Go to **Ext1Task4 - Step 7** and uncomment the code. This should be self explanitory. We draw the sprite :)
 
 	````C#
 	// draw the player
@@ -209,7 +209,7 @@ Our next task is to get our ship to shoot.
 	using Microsoft.Xna.Framework;
 	````
 
-1. We now need to load the textures for this sprite. So let's just add a constructor and call LoadContent in it. We also need to set the Velocity for this sprite. Note we are using an animated sprite this time, there are 3 frames available pshot_0, pshot_1 and pshot_2.
+1. We now need to load the textures for this sprite. So let's just add a constructor and call LoadContent in it. We also need to set the Velocity for this sprite. Note we are using an animated sprite this time, there are 3 frames available pshot_0, pshot_1 and pshot_2. In this case we use the second form of the Sprite.LoadContent method. This will load files which match the *format" we pass in. In this case files mathing "gfx\\pshot\\pshot_{0}". We then use the multiple textures we load to create a very simple animation.
 
 	````C#
 	public PlayerShot()

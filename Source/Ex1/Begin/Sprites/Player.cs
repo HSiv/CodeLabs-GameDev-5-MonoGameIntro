@@ -7,15 +7,10 @@ namespace AlienAttackUniversal.Sprites
 	{
 		public Player()
 		{
-			LoadContent(AlienAttackGame.Instance.Content,  "gfx\\player");
 		}
 
 		public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
 		{
-			if(Frames == null)
-				return;
-
-			spriteBatch.Draw(Frames[0], Position, color:Color.White, scale:Scale);
 		}
 	}
 }

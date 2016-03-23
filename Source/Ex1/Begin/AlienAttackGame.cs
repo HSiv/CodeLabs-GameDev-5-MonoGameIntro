@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using AlienAttackUniversal.Sprites;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace AlienAttackUniversal
 {
@@ -30,6 +32,10 @@ namespace AlienAttackUniversal
 		private Explosion _playerExplosion;
 		private EnemyGroup _enemyGroup;
 		private SpriteFont _font;
+		private Song _theme;
+		private SoundEffect _playerShot;
+		private SoundEffect _explosion;
+
 		private int _score;
 
 		public AlienAttackGame()
@@ -65,8 +71,6 @@ namespace AlienAttackUniversal
 
 			_playerShots = new List<PlayerShot>();
 
-			AudioManager.StartTheme();
-
 			base.Initialize();
 		}
 
@@ -78,6 +82,9 @@ namespace AlienAttackUniversal
 		{
 			_bgScreen = Content.Load<Texture2D>("gfx\\bgScreen");
 			_font = Content.Load<SpriteFont>("font");
+			_theme = Content.Load<Song>("sfx\\theme");           
+			_playerShot = Content.Load<SoundEffect>("sfx\\playerShot");
+			_explosion = Content.Load<SoundEffect>("sfx\\explosion");
 		}
 
 		/// <summary>
@@ -95,33 +102,22 @@ namespace AlienAttackUniversal
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Update(GameTime gameTime)
 		{
+			if(MediaPlayer.State == MediaState.Stopped)
+			{
+				MediaPlayer.IsRepeating = true;
+				MediaPlayer.Play(_theme);
+			}
+
 			_keyboardState = Keyboard.GetState();
 
 			if (_player != null)
 			{
-				if (_keyboardState.IsKeyDown(Keys.Left) && _player.Position.X > 0)
-					_player.Velocity = -PlayerVelocity;
-				else if (_keyboardState.IsKeyDown(Keys.Right) && _player.Position.X + _player.Width < ScreenWidth)
-					_player.Velocity = PlayerVelocity;
-				else
-					_player.Velocity = Vector2.Zero;
-
-				if((_keyboardState.IsKeyDown(Keys.Space) && !_lastKeyboard.IsKeyDown(Keys.Space) &&
-					 gameTime.TotalGameTime.TotalMilliseconds - _lastShotTime > ShotTime))
-				{
-					AddPlayerShot();
-					AudioManager.PlayCue(AudioManager.Cue.PlayerShot);
-					_lastShotTime = gameTime.TotalGameTime.TotalMilliseconds;
-				}
-
 				_player.Update(gameTime);
 			}
 
 			_enemyGroup.Update(gameTime);
 			UpdatePlayerShots(gameTime);
-
 			HandleCollisions(gameTime);
-
 			_lastKeyboard = _keyboardState;
 
 			base.Update(gameTime);
@@ -174,7 +170,7 @@ namespace AlienAttackUniversal
 					// remove the shot, add the score
 					_playerShots.RemoveAt(i);
 					_score += 100;
-					AudioManager.PlayCue(AudioManager.Cue.Explosion);
+					_explosion.Play();
 				}
 			}
 
@@ -186,7 +182,7 @@ namespace AlienAttackUniversal
 				Vector2 center = _player.Position + (_player.Size/2.0f);
 				_playerExplosion.Position = center - (_playerExplosion.Size/2.0f);
 				_player = null;
-				AudioManager.PlayCue(AudioManager.Cue.Explosion);
+				_explosion.Play();
 			}
 
 			// if the player explosion animation is running, update it

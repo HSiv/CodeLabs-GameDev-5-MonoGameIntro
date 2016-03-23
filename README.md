@@ -1,23 +1,23 @@
-﻿<a name="HOLTop" />
+﻿<a name="HOLTop"></a>
 # Introduction to MonoGame #
 
 ---
 
-<a name="Overview" />
+<a name="Overview"></a>
 ## Overview ##
 
-MonoGame is a free open source, cross platform gaming Framework. Developers using this framework can target Windows 10, MacOS, Linux, Android and iOS. All of which can use the same code base. This session will take you through the process of building a sample arcade game from scratch.
+MonoGame is a free open source, cross platform gaming Framework. Developers using this framework can target Windows 10, MacOS, Linux, Android, iOS and more, all using the same code base. This session will take you through the process of building a sample arcade game from scratch.
 
-<a name="Objectives" />
+<a name="Objectives"></a>
 ### Objectives ###
 
 In this module, you will see how to:
 
 - Process your game assets to make sure they are optimized for your target platform
 - Load game assets
-- Create a Sprite Base class
-- Handle Input from Keyboard 
-- Render textures to screen
+- Draw images to the screen
+- Handle input from the keyboard
+- Play music and sounds 
 
 <a name="Prerequisites"></a>
 ### Prerequisites ###
@@ -30,9 +30,7 @@ The following is required to complete this module:
 [1]: https://www.visualstudio.com/products/visual-studio-community-vs
 [2]: http://www.monogame.net/downloads/
 
-> **Note:** Make sure you have checked all the dependencies for this module before running the setup.
-
-<a name="Exercises" />
+<a name="Exercises"></a>
 ## Exercises ##
 
 This module includes the following exercise:
@@ -44,290 +42,150 @@ Estimated time to complete this module: **60 minutes**
 > **Note:** When you first start Visual Studio, you must select one of the predefined settings collections. Each predefined collection is designed to match a particular development style and determines window layouts, editor behavior, IntelliSense code snippets, and dialog box options. The procedures in this module describe the actions necessary to accomplish a given task in Visual Studio when using the **General Development Settings** collection. If you choose a different settings collection for your development environment, there may be differences in the steps that you should take into account.
 
 
-<a name="Getting Started" />
-### Getting Started: Creating your first game ###
+<a name="Getting Started"></a>
+### Getting Started: Creating your first MonoGame game ###
 
-In this exercise you will create your first MonoGame Windows 10 project. Since we only have an hour we'll be modifying an existing project to add functionality. The existing project is a space invaders style game. It is currently missing a player, so when you run the project you will only see aliens. During the course of this Lab you will be adding new code as well as uncommenting code existing code blocks.
+In this exercise you will create a game for Windows 10 using MonoGame. Since we only have an hour we'll be modifying an existing project to add functionality. The existing project is a space invaders style game. It is currently missing the player ship, input, and its sound effects, so when you run the project you will only see aliens. During the course of this Code Lab you will be adding new code to add these features.
 
-<a name="Ex1Task1" />
+<a name="Ex1Task1"></a>
 #### Task 1 - Open Project ####
 
 1. In **Visual Studio 2015** go to **File->Open Project**.
 
-2. Navigate to the module folder and into **Source/Ex1/Begin**.
+2. Navigate to **C:\Labs\CodeLabs-GameDev-5-MonoGameIntro\Source\Ex1\Begin**.
 
-3. Open the **AlienAttackUniversal.sln**.
+3. Open **AlienAttackUniversal.sln** solution.
 
-4. Once the project has loaded make sure your selected build configuration is set to "Debug" "x64".
+4. Once the project has loaded make sure your selected build configuration is set to **Debug** and **x86**.
 
 5. Hit **F5** or click the Run **Local Machine** button.
 
-The game should run and you will be presented with a Title screen. Hit space or enter and the game will start. At the moment only the aliens are present, the player is missing. Note if you don't seem **Local Machine** next to the run button check the **Configuration** you have selected. If it is not **x64** you will need to change it.
+The game should run, but at the moment only the aliens are present, and the player is missing.
 
-<a name="Ex1Task2" />
+<a name="Ex1Task2"></a>
 #### Task 2 - Add missing content ####
 
-No game would be complete without graphics and sound. Fortunately, this session comes with a complete set of assets for you to use. In order to get the maximun performance for your game you will need to pre-process the assets into an optimized format. This can be done using the MonoGame Pipeline Tool. Its purpose is to task assets like .png/.wav and compress/optimize them for the platform you are targeting. In this case Windows 10. This will allow you to take advantage of things like texture compression which in turn will allow you to include more graphics! and who doesn't like more graphics.
+No game would be complete without graphics and sound. Fortunately, this session comes with a complete set of assets for you to use. In order to get the maximum performance for your, game you will need to pre-process the assets into an optimized format for the target platform, in this case Windows 10. This can easily be done using the MonoGame Pipeline Tool. Its purpose is to take assets like PNG and WAV files and compress/optimize them for the platform you are targeting. This will allow you to take advantage of things like texture compression which, in turn, will allow you to include more graphics.
 
 Most of the content has already been added to the game, but some bits are missing. In this section we will use the Pipeline tool to add these assets to the game.
 
-1. Click the **Content** folder in the Solution to expand it.
+1. Click the **Content** folder in the Solution Explorer to expand it.
 
-1. Double click on **Content.mgcb**. This should open the file in the MonoGame Pipeline Tool. If the file opens in the code editor. Right-click on **Content.mgcb** and click **Open With**. The select the **MonoGame Pipeline Tool**.
+1. Double click on **Content.mgcb**. This should open the file in the MonoGame Pipeline Tool. If the file opens in the code editor, right-click on **Content.mgcb** and click **Open With**, and then select **MonoGame Pipeline Tool**.
 
-1. Right-click on the **gfx** folder in the pipeline tool and click **Add->Existing Folder**.
+1. Right-click on the **gfx** folder in the pipeline tool and click **Add->Existing Item**.
 
-1. Navigate to **Begin\AlienAttackUniversal\Content\gfx\player** and click **Add**. 
-
-1. Right-click on the **gfx** folder in the pipeline tool and click **Add->Existing Folder**.
-
-1. Navigate to **Begin\AlienAttackUniversal\Content\gfx\pshot** and click **Add**. 
+1. Navigate to **C:\Labs\CodeLabs-GameDev-5-MonoGameIntro\Source\Ex1\Begin\Content\gfx\player.png** and click **Open**.
 
 1. Right-click on the **sfx** folder in the pipeline tool and click **Add->Existing Item**.
 
-1. Navigate to **Begin\AlienAttackUniversal\Content\sfx\playerShot.wav** and click **Add**.
+1. Navigate to **Begin\AlienAttackUniversal\Content\sfx\playerShot.wav** and click **Open**.
 
-That is how easy it is to add content to the game. Add the content is included automatically in you project as long as it is in the Content.mcgb file. Sometimes you have files that you just want to copy over (like .xml files). You can also add those to the Content.mgcb file but set the Build Action to "Copy" and they will also be included.
+1. Select **File->Save** to save the changes.
 
-<a name="Ex1Task3" />
+That is how easy it is to add content to the game. All of the content is included automatically in you project as long as it is in the Content.mcgb file. If you have files that you just want to copy over (like XML files), you can also add those to the Content.mgcb file but set the Build Action to "Copy" and they will also be included without changes.
+
+<a name="Ex1Task3"></a>
 #### Task 3 - Add the Player ####
 
-The project has a base class for our sprites adding new sprites is going to be very straightforward. This base class is called "Sprite" and if you take a look at the code you will see it handles allot of things. Animation is one of them as well as handling updating a sprites position using its Velocity. Right now we want to add a new Sprite for our Player. 
+The project already has a **Player** class located in the **Sprites** directory, however its implementation is empty.  Let's fix that.  
 
-1. Right-click on the **Sprites** folder and click **Add->Class**. Call this class **Player.cs**.
+1. Double-click on the **Player.cs** item in Solution Explorer.  Notice that this class inherits from the project's base Sprite class.  Feel free to take a look at the base class, noting that it contains various properties like **Position** and **Velocity**.
 
-1. Change the **Player** so it derives from **Sprite**.
-
-	````C#
-	class Player : Sprite	
-	{
-	}
-	````
-
-1. We now need to load the textures for this sprite. So let's just add a constructor and call LoadContent in it.
+1. We now need to load the textures for this sprite. In the constructor, call the **LoadContent** method from the base **Sprite** class as shown:
 
 	````C#
 	public Player()
 	{
-		LoadContent(AlienAttackGame.Instance.Content,  "gfx\\player\\player");
+		LoadContent(AlienAttackGame.Instance.Content,  "gfx\\player");
 	}
 	````
+If you look at the **LoadContent** method, you will see that it uses MonoGame's **ContentManager** class to load the item located at "gfx\\player" as a **Texture2D**, which is the exact file we just added to the Content Pipeline Tool.
 
-That is it! All the other logic is handled in the Sprite class. At this point you should probabl take a look at the Sprite class. If we look at the *LoadContent* method you will see the following code.
-
-	```
+	````C#
 	public virtual void LoadContent(ContentManager contentManager, string name)
 	{
-            // load single frame
-            Frames = new Texture2D[1];
-            Frames[0] = contentManager.Load<Texture2D>(name);
-            Width = Frames[0].Width;
-            Height = Frames[0].Height;
+		// load single frame
+		Frames = new Texture2D[1];
+		Frames[0] = contentManager.Load<Texture2D>(name);
+		Width = Frames[0].Width;
+		Height = Frames[0].Height;
 	}
-	```
+	````
+As you can see this method makes use of the **ContentManager** class to load the texture. The **ContentManager** is the main way to load any kind of asset which has been processed by the content Pipeline. An instance is created on the Game class and is accessible via the **.Content** property. As you can see, we pass in ```AlienAttackGame.Instance.Content``` into the LoadContent method. 
+
+	The **ContentManager** provides a generic **Load** method for loading assets. You can use this to load **Texture2D**, **SpriteFont** and other content types. It also includes type checking, so if you attempt to load a song into a **Texture2D**, for example, the manager will throw an exception.
+
+1. Now that the content is loaded, the sprite needs to be drawn.  In the **Player** class, you will find an overridden **Draw** method which we can fill in with the proper code.  This method will be passed a **SpriteBatch** object.  A **SpriteBatch** does exactly what its name implies: it draws a batch of sprites to the screen.  We will just add the player's **Texture2D** to that list by writing the following code:
+
+	````C#
+		public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+		{
+			spriteBatch.Draw(Frames[0], Position);
+		}
+	````
+This code uses the **Frames** array from the Sprite class and draws the first (and only) element in that array.  Additionally, we pass in the current **Position** at which to draw the Sprite
+
+1. At this point, go ahead and run the game.  You should now see that there is a player ship at the bottom of the screen, but it still doesn't move or shoot...
 	
-As you can see this method makes use of the *ContentManager* class to load the texture. The *ContentManager* is the main way to load any kind of asset which has been processed by the content Pipeline. An instance is created on the Game class and is accessable via the *.Content* property. You can see we pass in ```AlienAttackGame.Instance.Content``` into the LoadContent method. 
-
-The *ContentManager* provides a generic Load method for loading assets. You can use this to load *Texture2D*, *SpriteFont* and other content types. It includes type checking. So if you attempt to load a song into a Texture2D the manager will throw an error. 
-
-<a name="Ex1Task4" />
+<a name="Ex1Task4"></a>
 #### Task 4 - Getting the Player Moving ####
 
-This task will involve uncommenting some existing code. In this section we will update the **GameScreen** to display and move our player. All the relevant code sections have been marked with a `//TODO Uncomment <Task> <Step>`. Just follow the **//TODO** items.
+1. Open **AlienAttackGame.cs** from Solution Explorer.
 
-1. Open the Task List in **Visual Studio 2015**. **View->TaskList**.
+1. Navigate to the **Update** method.  This method is called once per frame in order for you to update anything in the game world before it is drawn to the screen.  This is where we will read input and move the ship's position.
 
-1. Look for **Ex1Task4 - Step 1** Double click on it and then uncomment the code. The delcares our player field in the GameScreen.cs
+1. At the top of the **Update** method add the following to get the keyboard's current state:
 
 	````C#
-	private Player _player;
+	_keyboardState = Keyboard.GetState();
 	````
 
-1. Next we need to declare a field for the health/lives icon. In this case we re-use the Player sprite. Go to **Ext1Task4 - Step 2** and uncomment the code.
+1. At the bottom of the **Update** method, right before the call to **base.Update**, add the following code, which will save the current frame's keyboard state so we can compare it on the next frame:
 
 	````C#
-	private readonly Player _livesIcon;
+	_lastKeyboard = _keyboardState;
 	````
 
-1. Go to **Ext1Task4 - Step 3** and uncomment the code. As you can see we create a new instance of *Player*. Then set the players initaial position in the center of the screen.
+1. Now, let's read the arrow keys to determine if we should move the ship left or right.  Add the following code inside the null check on **_player**:
 
 	````C#
-	_player = new Player();
-	_player.Position = new Vector2(AlienAttackGame.ScreenWidth / 2 - _player.Width / 2, AlienAttackGame.ScreenHeight - 120);
-	````
-
-1. Go to **Ext1Task4 - Step 4** and uncomment the code. This creates the health icon and positions it at the bottom left of the screen. Also note we set the Sprite.Scale property so its scales by 1/2. That way it is not the same size as the main player sprite.
-
-	````C#
-	_livesIcon = new Player();
-	_livesIcon.Position = new Vector2(20, AlienAttackGame.ScreenHeight - 80);
-	_livesIcon.Scale = new Vector2(0.5f, 0.5f);
-	````
-
-1. Go to **Ext1Task4 - Step 5** and uncomment the code. This is the entire MovePlayer method. In this method we make use of the InputManager.ControlState to decide if we need to move the player left or right. Depending on the result we alter the velocity which will then be used in the Sprite.Update method to move the player.
-
-	````C#
-	_livesIcon = new Player();
-	_livesIcon.Position = new Vector2(20, AlienAttackGame.ScreenHeight - 80);
-	_livesIcon.Scale = new Vector2(0.5f, 0.5f);
-	````
-
-1. Go to **Ext1Task4 - Step 6** and uncomment the code. Note how we always pass gameTime into the methods dealing with Update and Draw. This is so we can update things based on the amount of time that has elapsed between frames.
-
-	````C#
-	MovePlayer(gameTime);
-	````
-
-1. Go to **Ext1Task4 - Step 7** and uncomment the code. This should be self explanitory. We draw the sprite :)
-
-	````C#
-	// draw the player
 	if (_player != null)
-		_player.Draw(gameTime, _spriteBatch);
-	````
-
-1. Hit **F5** or click the Run **Local Machine** button.
-
-You should now see our space ship at the bottom of the screen. If you press the **Left/Right** keys, you will be able to move the ship.
-
-<a name="Ex1Task5" />
-#### Task 5 - Add the PlayerShot ####
-
-Our next task is to get our ship to shoot. 
-
-1. Right-click on the **Sprites** folder and click **Add->Class**. Call this class **PlayerShot.cs**.
-
-1. Change the **PlayerShot** so it derives from **Sprite**.
-
-	````C#
-	class PlayerShot : Sprite
-	````
-
-1. Add the following using clause.
-
-	````C#
-	using Microsoft.Xna.Framework;
-	````
-
-1. We now need to load the textures for this sprite. So let's just add a constructor and call LoadContent in it. We also need to set the Velocity for this sprite. Note we are using an animated sprite this time, there are 3 frames available pshot_0, pshot_1 and pshot_2. In this case we use the second form of the Sprite.LoadContent method. This will load files which match the *format" we pass in. In this case files mathing "gfx\\pshot\\pshot_{0}". We then use the multiple textures we load to create a very simple animation.
-
-	````C#
-	public PlayerShot()
 	{
-		LoadContent(AlienAttackGame.Instance.Content, "gfx\\pshot\\pshot_{0}", 3);
-		Velocity = new Vector2(0, -300 / 1000.0f);
+		if (_keyboardState.IsKeyDown(Keys.Left) && _player.Position.X > 0)
+			_player.Velocity = -PlayerVelocity;
+		else if (_keyboardState.IsKeyDown(Keys.Right) && _player.Position.X + _player.Width < ScreenWidth)
+			_player.Velocity = PlayerVelocity;
+		else
+			_player.Velocity = Vector2.Zero;
+			
+		_player.Update(gameTime);
 	}
 	````
+This chunk of code uses the **IsKeyDown** method from the **KeyboardState** class to determine if a keyboard key is held down.  We check if the Left arrow key is down (**Keys.Left**) and, if it is, we set the **Velocity** propery on the player to the negative **PlayerVelcocity** value.  If the Right arrow key is down (**Keys.Right**), we set the velocity to the positive **PlayerVelocity** value.  Finally, if neither is held down, we set the **Velocity** property to **Vector2.Zero**, which will not move the ship in either direction this frame.
 
-1. We also need to override the **Update** method. This will let use update the animation for this sprite.
+1. Now, run the game again.  You should now be able to move the ship left and right with the arrow keys!
 
-	````C#
-	public override void Update(GameTime gameTime)
-	{
-		base.Update(gameTime);
-		AnimateReverse(gameTime, 100);
-	}
-	````
+<a name="Ex1Task5"></a>
+#### Task 5 - Add Player Firing ####
 
-<a name="Ex1Task6" />
-#### Task 6 - Shooting ####
+Our next task is to get our ship to shoot.
 
-1. Open the **Task List** in **Visual Studio 2015** by selecting **View->TaskList**.
+// TODO - add input, call AddPlayerShot
 
-1. Look for **Ex1Task6 - Step 1**. Double click on it and then uncomment the code. This is our list in which we will place our PlayerShot instances.
+<a name="Ex1Task6"></a>
+#### Task 6 - Adding Shot Sound Effect ####
 
-	````C#
-	private readonly List<PlayerShot> _playerShots;
-	````
-
-1. Look for **Ex1Task6 - Step 2**. Double click on it and then uncomment the code so that we create the new *_playerShots* list.
- 
-	````C#
-	_playerShots = new List<PlayerShot>();
-	````
-
-1. Look for **Ex1Task6 - Step 3**. Double click on it and then uncomment the code. This code is the entire **UpdatePlayerShots** method. you should see an error in the code. **AudioManager.Cue.PlayerShot** is not defined. We will get to that shortly. This is quite a large method. Its take is three fold. 1) Adding *shots* to the list. But only if an interval has passed. We don't want the player to fire so fast the game is easy. 2) Update the PlayerShot sprite so they move and 3) Remove any shots that are off the top of the screen.
-
-1. Look for **Ex1Task6 - Step 4**. Double click on it and then uncomment the code. This just makes sure that we call the method we just uncommented.
-
-	````C#
-	UpdatePlayerShots(gameTime);
-	````
-
-1. We have methods to Update the shots. We now need to draw them. In this case we just loop through the items in the array and call playerShot.Draw. Look for **Ex1Task6 - Step 5**. Double click on it and then uncomment the code.
-
-	````C#
-	// draw the player shots
-	foreach (PlayerShot playerShot in _playerShots)
-		playerShot.Draw(gameTime, _spriteBatch);
-	````
-
-1. Look for **Ex1Task6 - Step 6** Double click on it and then uncomment the code. This fixes the error with  "AudioManager.Cue.PlayerShot" you may have noticed earlier.
-
-	````C#
-	PlayerShot,
-	````
-
-1. Look for **Ex1Task6 - Step 7**. Double click on it and then uncomment the code.
- 
-	````C#
-	private static readonly SoundEffect _playerShot;
-	````
-
-1. Look for **Ex1Task6 - Step 8**. Double click on it and then uncomment the code. This makes use of the ContentManager we covered earlier. But this time we load a *SoundEffect*. 
-
-	````C#
-	_playerShot = AlienAttackGame.Instance.Content.Load<SoundEffect>("sfx\\playerShot");
-	````
-
-1. Look for **Ex1Task6 - Step 9**. Double click on it and then uncomment the code. SoundEffect classes have a *Play* method on them. So playing a sound is as simple as just calling *.Play*.
-
-	````C#
-	case Cue.PlayerShot:
-			_playerShot.Play();
-			break;
-	````
-
-1. Hit **F5** or click the Run **Local Machine** button.
+// TODO: Load sfx content in AudioManager, play in Update method
 
 Now when the game runs you should be able to fire using the space bar.
 
-<a name="Ex1Task7" />
-#### Task 7 - Blowing stuff up! ####
+<a name="Ex1Task7"></a>
+#### Task 7 - Drawing the Score ####
 
-So far we have moving aliens, moving players and lots of shooting, but not explisions. In this task we will add the final bits for the game. Most of the code we will be looking at will be collision handling. for sprite based games collisions are normally handled by checking to see if BoundingBoxes are intersecting. MonoGame has a **BoundingBox** class. The **Sprite** class has an boundingbox property which defines where the sprite is in the game. We can use the bounding boxes from two different sprites to see if they collide. This is how we detect if a shot has hit a player.
+// TOOD: SpriteFont
 
-1. Open the **Task List** in **Visual Studio 2015** by selecting **View->TaskList**.
-
-1. Look for **Ex1Task7 - Step 1**. Double click on it and then uncomment the code. This is a large chunk of Collision handling code. The methods are HandlePlayerShotCollision, HandleEnemyShotCollision and HandleEnemyPlayerCollision. *HandlePlayerShotCollision* loops through all the ememies in the group and checks to see if they collide with any player shot sprites. It does this by calling the CheckColision method. This method just checks for a *BoundingBox* intersection using.
-
-	```C#
-	sprite1.BoundingBox.Intersects(sprite2.BoundingBox); 
-	```
-
-*BoundingBox* is a build in MonoGame type. You can use it to easily detect if two boxes intersect with each other. Which makes it perfect for 2D collisions. The remaining methods *HandleEnemyShotCollision* and *HandleEnemyPlayerCollision* to the same thing. *HandleEnemyShotCollision* checks to see if an emeny shot has hit the player. The final method checks to see if an Emeny hits the player. We need this because the emenies slows move down the screen.
-
-1. Look for **Ex1Task7 - Step 2**. Double click on it and then uncomment the code. Again this is a fair size chunk of collision code. This code is reacting to collisons using the methods we just enabled. They principally involve creating an Explosion sprite and playing audio when a collision is detected. It is also responsible for incrementing the score.
-
-1. Look for **Ex1Task7 - Step 3**. Double click on it and then uncomment the code. This looks very familiar to code we added earlier. This is used to reset the player position if they are destroyed.
-
-	````C#
-	_playerShots.Clear();
-	_player = new Player();
-	_player.Position = new Vector2(AlienAttackGame.ScreenWidth / 2 - _player.Width / 2, AlienAttackGame.ScreenHeight - 100);
-	````
-
-1. Look for **Ex1Task7 - Step 4**. Double click on it and then uncomment the code. 
-
-	````C#
-	_playerShots.Clear();
-	````
-
-1. Hit **F5** or click the Run **Local Machine** button.
-
-That should be everything. You now have a fully functioning game!
-
-<a name="Summary" />
+<a name="Summary"></a>
 ## Summary ##
 
 The MonoGame framework does not force you to do things in a particular way. As a result, there are many different ways to write a game. This module should have given you a grasp of:

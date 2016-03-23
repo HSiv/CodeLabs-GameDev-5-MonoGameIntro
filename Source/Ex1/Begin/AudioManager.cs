@@ -24,7 +24,7 @@ namespace AlienAttackUniversal
 			// load 'em up
 			_theme = AlienAttackGame.Instance.Content.Load<Song>("sfx\\theme");           
 			_enemyShot = AlienAttackGame.Instance.Content.Load<SoundEffect>("sfx\\enemyShot");
-			//_playerShot = AlienAttackGame.Instance.Content.Load<SoundEffect>("sfx\\playerShot");
+			_playerShot = AlienAttackGame.Instance.Content.Load<SoundEffect>("sfx\\playerShot");
 			_explosion = AlienAttackGame.Instance.Content.Load<SoundEffect>("sfx\\explosion");
 		}
 
@@ -47,13 +47,13 @@ namespace AlienAttackUniversal
 
 		public static void StartTheme()
 		{
-            MediaPlayer.IsRepeating = true;
-            MediaPlayer.Play(_theme);
-        }
+			MediaPlayer.IsRepeating = true;
+			MediaPlayer.Play(_theme);
+		}
 
 		public static void StopTheme()
 		{
-            MediaPlayer.Stop();
-        }
+			MediaPlayer.Stop();
+		}
 	}
 }

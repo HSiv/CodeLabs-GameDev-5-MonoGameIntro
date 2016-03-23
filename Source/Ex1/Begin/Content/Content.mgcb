@@ -283,6 +283,30 @@
 /processorParam:TextureFormat=Color
 /build:gfx/explosion/explosion_8.png
 
+#begin gfx/pshot/pshot_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=0,0,0,0
+/processorParam:ColorKeyEnabled=False
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:gfx/pshot/pshot_0.png
+
+#begin gfx/pshot/pshot_1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=0,0,0,0
+/processorParam:ColorKeyEnabled=False
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:gfx/pshot/pshot_1.png
+
 #begin gfx/titleScreen.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -307,6 +331,12 @@
 /processorParam:Quality=Best
 /build:sfx/explosion.wav
 
+#begin sfx/playerShot.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sfx/playerShot.wav
+
 #begin sfx/theme.wma
 /importer:WmaImporter
 /processor:SongProcessor
@@ -324,4 +354,28 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:gfx/eshot/eshot_2.png
+
+#begin gfx/pshot/pshot_2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:gfx/pshot/pshot_2.png
+
+#begin gfx/player.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:gfx/player.png
 

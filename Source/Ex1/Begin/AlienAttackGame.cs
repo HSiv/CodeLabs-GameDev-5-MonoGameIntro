@@ -82,9 +82,12 @@ namespace AlienAttackUniversal
 		{
 			_bgScreen = Content.Load<Texture2D>("gfx\\bgScreen");
 			_font = Content.Load<SpriteFont>("font");
-			_theme = Content.Load<Song>("sfx\\theme");           
-			_playerShot = Content.Load<SoundEffect>("sfx\\playerShot");
+			_theme = Content.Load<Song>("sfx\\theme");
 			_explosion = Content.Load<SoundEffect>("sfx\\explosion");
+
+			//
+			// TODO: Load playerShot sound effect
+			//
 		}
 
 		/// <summary>
@@ -112,6 +115,10 @@ namespace AlienAttackUniversal
 
 			if (_player != null)
 			{
+				//
+				// TODO: Handle player input
+				//
+
 				_player.Update(gameTime);
 			}
 
@@ -149,9 +156,9 @@ namespace AlienAttackUniversal
 			if (_playerExplosion != null)
 				_playerExplosion.Draw(gameTime, _spriteBatch);
 
-			// draw the score
-			Vector2 scoreSize = _font.MeasureString("Score: " + _score);
-			_spriteBatch.DrawString(_font, "Score: " + _score, ScorePosition - scoreSize/2.0f, Color.Aqua);
+			//
+			// TODO: Draw score
+			//
 
 			_spriteBatch.End();
 			_scaler.Draw();

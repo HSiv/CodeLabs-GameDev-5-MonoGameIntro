@@ -185,29 +185,66 @@ The project already has a **Player** class located in the **Sprites** directory,
 <a name="Ex1Task5"></a>
 #### Task 5 - Adding Player Firing ####
 
-Our next task is to get our ship to shoot.
+Our next task is to get our ship to shoot.  
 
-// TODO - add input, call AddPlayerShot
+1. Back in our **Update** method, just below where we added the last few lines of code to move the ship, let's add some code to check the state of the space bar, and fire a shot when it's pressed:
+
+	````C#
+	if((_keyboardState.IsKeyDown(Keys.Space) && !_lastKeyboard.IsKeyDown(Keys.Space) &&
+			gameTime.TotalGameTime.TotalMilliseconds - _lastShotTime > ShotTime))
+	{
+		AddPlayerShot();
+		_lastShotTime = gameTime.TotalGameTime.TotalMilliseconds;
+	}
+	````
+This code will again use the **IsKeyDown** method to check whether the space bar is pressed (**Keys.Space**), but it also checked to make sure that both a) it wasn't pressed down on the last frame, and b) it has been more than **ShotTime** since the last time a shot was fired.  This ensures the player can't just hold the space bar down and fire shots continuously.  If those conditions are met, we call the **AddPlayerShot** method, and then save off the current time in the **_lastShotTime** member for comparison on subsequent frames.
+
+1. At this point, you can run the game again and you will be able to fire shots from the player ship and destroy the aliens.  See the **HandleCollisions** and **UpdatePlayerShots** methods for more information on how the game does collision detection and moves the shots up the screen.
 
 <a name="Ex1Task6"></a>
 #### Task 6 - Adding Shot Sound Effect ####
 
-// TODO: Load sfx content in AudioManager, play in Update method
+Now that we can fire shots up the screen, it would be nice if there was a sound effect to accompany the action.  First, we need to load the proper effect using the Content object, just like we did with the player ship graphic.
 
-Now when the game runs you should be able to fire using the space bar.
+1. Navigate to the **LoadContent** method.
+
+1. Add the following code to load the PlayerShot sound effect:
+
+	````C#
+	_playerShot = Content.Load<SoundEffect>("sfx\\playerShot");
+	````
+1. Now that we have the effect loaded, we just need to play it when the shot is fired.  Navigate back to the **Update** method, and add the following line of code following the call to **AddPlayerShot**:
+
+ 	````C#
+	 _playerShot.Play();
+	 ````
+That's it!  Now the game will fire shots and play the sound effect accordingly.
 
 <a name="Ex1Task7"></a>
 #### Task 7 - Drawing the Score ####
 
-// TOOD: SpriteFont
+Throughout the game, we have been keeping score based on the player destroying the enemy ships.  For every ship destroyed, the player earns 100 points, which is stored in the **_score** member variable.  Let's draw this to the screen.
+
+1. Navigate to the **Draw** method
+
+1. Near the bottom of the method, prior to the call to **_spritebatch.End**, add the following lines of code:
+
+	````C#
+	Vector2 scoreSize = _font.MeasureString("Score: " + _score);
+	_spriteBatch.DrawString(_font, "Score: " + _score, ScorePosition - scoreSize/2.0f, Color.Aqua);
+	````
+This code uses a **SpriteFont** to draw text to the screen.  A **SpriteFont** already exists in the project and is included in the Content Pipeline Tool.  This is a simple XML file that defines the font to use, its size, and other characteristics.  When the Pipeline Tool runs at compile time, a MonoGame-specific file is created which contains all of the alphanumeric symbols of the font as you specified.  In code, we can simply load that font, and use the **SpriteFont** class to draw text to the screen.
+
+	In the example above, the first line of code uses the **MeasureString** method to determine the width and height of the rectangle that would be necessary to draw the string passed in.  The second line of code calls **DrawString** to actually draw the text to the screen, using the previously returned size to place it centered on the screen.  
 
 <a name="Summary"></a>
 ## Summary ##
 
-The MonoGame framework does not force you to do things in a particular way. As a result, there are many different ways to write a game. This module should have given you a grasp of:
+MonoGame is an extremely flexible framework that allows you to write a game in any way you see fit.  It does not force you to do things in a particular way. As a result, there are many different ways to write a game.  This module should have given you a grasp of:
 
 - Processing and Loading Content
 - Drawing Textures
-- Drawing Text
 - Playing Sound and Music.
-- Structuring you code so you can reuse functionality.
+- Drawing Text
+
+Check out the much longer **README_Full.md** document in this repo to see how this game was built from absolute scratch, with a bit more context on proper game architecture.

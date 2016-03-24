@@ -71,6 +71,10 @@ namespace AlienAttackUniversal
 
 			_playerShots = new List<PlayerShot>();
 
+			//
+			// TODO: Enable TouchPanel gestures
+			//
+
 			base.Initialize();
 		}
 

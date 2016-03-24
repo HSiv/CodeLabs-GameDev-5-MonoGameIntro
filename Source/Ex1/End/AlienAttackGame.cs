@@ -1,30 +1,42 @@
-using System;
-using Windows.UI.ViewManagement;
+using System.Collections.Generic;
+using AlienAttackUniversal.Sprites;
 using Microsoft.Xna.Framework;
-using AlienAttackUniversal.Screens;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace AlienAttackUniversal
 {
-	public enum GameState
-	{
-		TitleScreen,
-		GameScreen
-	};
-
 	/// <summary>
 	/// This is the main type for your game
 	/// </summary>
 	public class AlienAttackGame : Game
 	{
-		public static AlienAttackGame Instance;
-
-		private readonly GraphicsDeviceManager _graphics;
-
-		private DrawableGameComponent _screen;
-		private RenderTargetScaler _scaler;
-
 		public static int ScreenWidth = 1920;
 		public static int ScreenHeight = 1080;
+		private static int ShotTime = 500;
+		private static readonly Vector2 PlayerVelocity = new Vector2(400 / 1000.0f, 0);
+		private static readonly Vector2 ScorePosition = new Vector2(ScreenWidth / 2.0f, 30);
+		private static Vector2 PlayerStartPosition;
+
+		public static AlienAttackGame Instance;
+		private readonly GraphicsDeviceManager _graphics;
+		private SpriteBatch _spriteBatch;
+		private RenderTargetScaler _scaler;
+		private static KeyboardState _keyboardState, _lastKeyboard;
+		private Texture2D _bgScreen;
+		private Player _player;
+		private List<PlayerShot> _playerShots;
+		private double _lastShotTime;
+		private Explosion _playerExplosion;
+		private EnemyGroup _enemyGroup;
+		private SpriteFont _font;
+		private Song _theme;
+		private SoundEffect _playerShot;
+		private SoundEffect _explosion;
+
+		private int _score;
 
 		public AlienAttackGame()
 		{
@@ -36,7 +48,7 @@ namespace AlienAttackUniversal
 			_graphics.PreferredBackBufferWidth = ScreenWidth;
 			_graphics.PreferredBackBufferHeight = ScreenHeight;
 
-            Content.RootDirectory = "Content";
+			Content.RootDirectory = "Content";
 		}
 
 		/// <summary>
@@ -49,8 +61,15 @@ namespace AlienAttackUniversal
 		{
 			_scaler = new RenderTargetScaler(this, _graphics, ScreenWidth, ScreenHeight);
 
-			// create the title screen
-			SetState(GameState.TitleScreen);
+			_spriteBatch = new SpriteBatch(GraphicsDevice);
+
+			_player = new Player();
+			PlayerStartPosition = new Vector2(ScreenWidth / 2 - _player.Width / 2, ScreenHeight - 120);
+			_player.Position = PlayerStartPosition;
+
+			_enemyGroup = new EnemyGroup();
+
+			_playerShots = new List<PlayerShot>();
 
 			base.Initialize();
 		}
@@ -61,6 +80,11 @@ namespace AlienAttackUniversal
 		/// </summary>
 		protected override void LoadContent()
 		{
+			_bgScreen = Content.Load<Texture2D>("gfx\\bgScreen");
+			_font = Content.Load<SpriteFont>("font");
+			_theme = Content.Load<Song>("sfx\\theme");
+			_explosion = Content.Load<SoundEffect>("sfx\\explosion");
+			_playerShot = Content.Load<SoundEffect>("sfx\\playerShot");
 		}
 
 		/// <summary>
@@ -78,15 +102,39 @@ namespace AlienAttackUniversal
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Update(GameTime gameTime)
 		{
-			// update the user input
-			InputManager.Update();
+			if(MediaPlayer.State == MediaState.Stopped)
+			{
+				MediaPlayer.IsRepeating = true;
+				MediaPlayer.Play(_theme);
+			}
 
-			// Allows the game to exit
-			//if(InputManager.ControlState.Quit)
-			//	this.Exit();
+			_keyboardState = Keyboard.GetState();			
 
-			// update the current screen
-			_screen.Update(gameTime);
+			if (_player != null)
+			{
+				if (_keyboardState.IsKeyDown(Keys.Left) && _player.Position.X > 0)
+					_player.Velocity = -PlayerVelocity;
+				else if (_keyboardState.IsKeyDown(Keys.Right) && _player.Position.X + _player.Width < ScreenWidth)
+					_player.Velocity = PlayerVelocity;
+				else
+					_player.Velocity = Vector2.Zero;
+
+				if((_keyboardState.IsKeyDown(Keys.Space) && !_lastKeyboard.IsKeyDown(Keys.Space) &&
+						gameTime.TotalGameTime.TotalMilliseconds - _lastShotTime > ShotTime))
+				{
+					AddPlayerShot();
+					_playerShot.Play();
+					_lastShotTime = gameTime.TotalGameTime.TotalMilliseconds;
+				}
+
+				_player.Update(gameTime);
+			}
+
+			_enemyGroup.Update(gameTime);
+			UpdatePlayerShots(gameTime);
+			HandleCollisions(gameTime);
+
+			_lastKeyboard = _keyboardState;
 
 			base.Update(gameTime);
 		}
@@ -98,21 +146,101 @@ namespace AlienAttackUniversal
 		protected override void Draw(GameTime gameTime)
 		{
 			_scaler.SetRenderTarget();
-			_screen.Draw(gameTime);
+			_spriteBatch.Begin();
+
+			_spriteBatch.Draw(_bgScreen, Vector2.Zero, Color.White);
+			
+			// draw the enemy board
+			_enemyGroup.Draw(gameTime, _spriteBatch);
+
+			// draw the player shots
+			foreach(PlayerShot playerShot in _playerShots)
+				playerShot.Draw(gameTime, _spriteBatch);
+
+			// draw the player
+			if (_player != null)
+				_player.Draw(gameTime, _spriteBatch);
+
+			// draw the player explosion
+			if (_playerExplosion != null)
+				_playerExplosion.Draw(gameTime, _spriteBatch);
+
+			Vector2 scoreSize = _font.MeasureString("Score: " + _score);
+			_spriteBatch.DrawString(_font, "Score: " + _score, ScorePosition - scoreSize/2.0f, Color.Aqua);
+
+			_spriteBatch.End();
 			_scaler.Draw();
 		}
 
-		public void SetState(GameState newState)
+#region Game Logic
+		private void HandleCollisions(GameTime gameTime)
 		{
-			switch(newState)
+			// see if a player shot hit an enemy
+			for(int i = 0; i < _playerShots.Count; i++)
 			{
-				case GameState.TitleScreen:
-					_screen = new TitleScreen(this);
-					break;
-				case GameState.GameScreen:
-					_screen = new GameScreen(this);
-					break;
+				PlayerShot playerShot = _playerShots[i];
+				// check the shot and see if it it collided with an enemy
+				if(playerShot != null && _enemyGroup.HandlePlayerShotCollision(_playerShots[i]))
+				{
+					// remove the shot, add the score
+					_playerShots.RemoveAt(i);
+					_score += 100;
+					_explosion.Play();
+				}
+			}
+
+			// see if an enemy shot hit the player
+			if(_player != null && _enemyGroup.HandleEnemyShotCollision(_player))
+			{
+				// blow up the player
+				_playerExplosion = new Explosion();
+				Vector2 center = _player.Position + (_player.Size/2.0f);
+				_playerExplosion.Position = center - (_playerExplosion.Size/2.0f);
+				_player = null;
+				_explosion.Play();
+			}
+
+			// if the player explosion animation is running, update it
+			if(_playerExplosion != null)
+			{
+				// if this is the last frame
+				if(_playerExplosion.Update(gameTime))
+				{
+					// remove it
+					_playerExplosion = null;
+
+					// reset the board
+					_enemyGroup.Reset();
+					_playerShots.Clear();
+
+					_player = new Player();
+					_player.Position = PlayerStartPosition;
+				}
 			}
 		}
+
+		private void AddPlayerShot()
+		{
+			// create a new shot over the ship
+			PlayerShot ps = new PlayerShot();
+			ps.Position = _player.Position + (_player.Size/2) - (ps.Size/2) - new Vector2(0, ps.Height);
+			_playerShots.Add(ps);
+		}
+
+		private void UpdatePlayerShots(GameTime gameTime)
+		{
+			// enumerate the player shots on the screen
+			for(int i = 0; i < _playerShots.Count; i++)
+			{
+				PlayerShot playerShot = _playerShots[i];
+
+				playerShot.Update(gameTime);
+
+				// if it's off the top of the screen, remove it from the list
+				if(playerShot.Position.Y + playerShot.Height < 0)
+					_playerShots.RemoveAt(i);
+			}
+		}
+#endregion
 	}
 }

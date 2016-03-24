@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace AlienAttackUniversal.Sprites
@@ -27,6 +28,7 @@ namespace AlienAttackUniversal.Sprites
 		private const int ScreenEdge = 20;	// virtual edge of screen to change direction
 		private Vector2 EnemySpacing = new Vector2(16, 32);	// space between sprites
 		private readonly Vector2 EnemyVelocity = new Vector2(100 / 1000.0f, 0);	// speed at which grid moves per frame
+		private readonly SoundEffect _enemyShot;
 
 		public EnemyGroup()
 		{
@@ -36,6 +38,8 @@ namespace AlienAttackUniversal.Sprites
 			_explosions = new List<Explosion>();
 
 			_enemies = new Enemy[EnemyRows,EnemyCols];
+
+			_enemyShot = AlienAttackGame.Instance.Content.Load<SoundEffect>("sfx\\enemyShot");
 
 			// create a grid of enemies
 			for(int y = 0; y < EnemyRows; y++)
@@ -121,13 +125,13 @@ namespace AlienAttackUniversal.Sprites
 			return null;
 		}
 
-        public bool AllDestroyed()
-        {
-            // we won if we can't find any enemies at all
-            return (FindLeftMostEnemy() == null);
-        }
+		public bool AllDestroyed()
+		{
+			// we won if we can't find any enemies at all
+			return (FindLeftMostEnemy() == null);
+		}
 
-        private void MoveEnemies(GameTime gameTime)
+		private void MoveEnemies(GameTime gameTime)
 		{
 			Enemy enemy = FindRightMostEnemy();
 
@@ -171,51 +175,51 @@ namespace AlienAttackUniversal.Sprites
 			}
 		}
 
-        private void EnemyFire(GameTime gameTime)
-        {
-            if (AllDestroyed())
-                return;
+		private void EnemyFire(GameTime gameTime)
+		{
+			if (AllDestroyed())
+				return;
 
-            // at random times, drop an enemy shot
-            if (_random.NextDouble() > 0.99f)
-            {
-                int x, y;
+			// at random times, drop an enemy shot
+			if (_random.NextDouble() > 0.99f)
+			{
+				int x, y;
 
-                // find an enemy that hasn't been destroyed
-                do
-                {
-                    x = (int)(_random.NextDouble() * EnemyCols);
-                    y = (int)(_random.NextDouble() * EnemyRows);
-                }
-                while (_enemies[y, x] == null);
+				// find an enemy that hasn't been destroyed
+				do
+				{
+					x = (int)(_random.NextDouble() * EnemyCols);
+					y = (int)(_random.NextDouble() * EnemyRows);
+				}
+				while (_enemies[y, x] == null);
 
-                // create a shot for that enemy and add it to the list
-                EnemyShot enemyShot = new EnemyShot();
-                enemyShot.Position = _enemies[y, x].Position;
-                enemyShot.Position += new Vector2(0, _enemies[y, x].Height);
-                _enemyShots.Add(enemyShot);
+				// create a shot for that enemy and add it to the list
+				EnemyShot enemyShot = new EnemyShot();
+				enemyShot.Position = _enemies[y, x].Position;
+				enemyShot.Position += new Vector2(0, _enemies[y, x].Height);
+				_enemyShots.Add(enemyShot);
 
-                AudioManager.PlayCue(AudioManager.Cue.EnemyShot);
-            }
+				_enemyShot.Play();
+			}
 
-            for (int i = 0; i < _enemyShots.Count; i++)
-            {
-                // update all shots
-                _enemyShots[i].Update(gameTime);
+			for (int i = 0; i < _enemyShots.Count; i++)
+			{
+				// update all shots
+				_enemyShots[i].Update(gameTime);
 
-                // remove those that are off the screen
-                if (_enemyShots[i].Position.Y > AlienAttackGame.ScreenHeight)
-                    _enemyShots.RemoveAt(i);
-            }
-        }
+				// remove those that are off the screen
+				if (_enemyShots[i].Position.Y > AlienAttackGame.ScreenHeight)
+					_enemyShots.RemoveAt(i);
+			}
+		}
 
-        public bool CheckCollision(Sprite s1, Sprite s2)
-        {
-            // simple bounding box collision detection
-            return s1.BoundingBox.Intersects(s2.BoundingBox);
-        }
+		public bool CheckCollision(Sprite s1, Sprite s2)
+		{
+			// simple bounding box collision detection
+			return s1.BoundingBox.Intersects(s2.BoundingBox);
+		}
 
-        public bool HandlePlayerShotCollision(PlayerShot playerShot)
+		public bool HandlePlayerShotCollision(PlayerShot playerShot)
 		{
 			for(int y = 0; y < EnemyRows; y++)
 			{

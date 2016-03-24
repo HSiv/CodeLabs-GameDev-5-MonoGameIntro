@@ -111,12 +111,18 @@ namespace AlienAttackUniversal
 				MediaPlayer.Play(_theme);
 			}
 
-			_keyboardState = Keyboard.GetState();
-
+			//
+			// TODO: Read keyboard
+			//
+			
 			if (_player != null)
 			{
 				//
-				// TODO: Handle player input
+				// TODO: Handle player input for moving
+				//
+				
+				//
+				// TODO: Handle player input for firing
 				//
 
 				_player.Update(gameTime);
@@ -125,7 +131,10 @@ namespace AlienAttackUniversal
 			_enemyGroup.Update(gameTime);
 			UpdatePlayerShots(gameTime);
 			HandleCollisions(gameTime);
-			_lastKeyboard = _keyboardState;
+
+			//
+			// TODO: Store last keyboard state
+			//
 
 			base.Update(gameTime);
 		}

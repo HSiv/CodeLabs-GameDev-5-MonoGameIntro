@@ -247,4 +247,4 @@ MonoGame is an extremely flexible framework that allows you to write a game in a
 - Playing Sound and Music.
 - Drawing Text
 
-Check out the much longer **README_Full.md** document in this repo to see how this game was built from absolute scratch, with a bit more context on proper game architecture.
+Check out the much longer **README.md** document in the Complete directory in this repo to see how this game was built from absolute scratch, with a bit more context on proper game architecture.

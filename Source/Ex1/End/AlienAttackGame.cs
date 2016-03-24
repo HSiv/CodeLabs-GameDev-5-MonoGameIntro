@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
 using Microsoft.Xna.Framework.Media;
 
 namespace AlienAttackUniversal
@@ -71,6 +72,8 @@ namespace AlienAttackUniversal
 
 			_playerShots = new List<PlayerShot>();
 
+			TouchPanel.EnabledGestures = GestureType.Tap | GestureType.HorizontalDrag;
+
 			base.Initialize();
 		}
 
@@ -102,6 +105,8 @@ namespace AlienAttackUniversal
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Update(GameTime gameTime)
 		{
+			bool left = false, right = false, fire = false;
+
 			if(MediaPlayer.State == MediaState.Stopped)
 			{
 				MediaPlayer.IsRepeating = true;
@@ -110,17 +115,38 @@ namespace AlienAttackUniversal
 
 			_keyboardState = Keyboard.GetState();			
 
+			if (_keyboardState.IsKeyDown(Keys.Left) && _player.Position.X > 0)
+				left = true;
+			else if (_keyboardState.IsKeyDown(Keys.Right) && _player.Position.X + _player.Width < ScreenWidth)
+				right = true;
+
+			if((_keyboardState.IsKeyDown(Keys.Space) && !_lastKeyboard.IsKeyDown(Keys.Space)))
+				fire = true;
+
+			while(TouchPanel.IsGestureAvailable)
+			{
+				GestureSample gs = TouchPanel.ReadGesture();
+				if(gs.GestureType == GestureType.HorizontalDrag)
+				{
+					if(gs.Delta.X < 0)
+						left = true;
+					else if(gs.Delta.X > 0)
+						right = true;
+				}
+				if(gs.GestureType == GestureType.Tap)
+					fire = true;
+			}
+
 			if (_player != null)
 			{
-				if (_keyboardState.IsKeyDown(Keys.Left) && _player.Position.X > 0)
+				if (left && _player.Position.X > 0)
 					_player.Velocity = -PlayerVelocity;
-				else if (_keyboardState.IsKeyDown(Keys.Right) && _player.Position.X + _player.Width < ScreenWidth)
+				else if (right && _player.Position.X + _player.Width < ScreenWidth)
 					_player.Velocity = PlayerVelocity;
 				else
 					_player.Velocity = Vector2.Zero;
 
-				if((_keyboardState.IsKeyDown(Keys.Space) && !_lastKeyboard.IsKeyDown(Keys.Space) &&
-						gameTime.TotalGameTime.TotalMilliseconds - _lastShotTime > ShotTime))
+				if(fire && gameTime.TotalGameTime.TotalMilliseconds - _lastShotTime > ShotTime)
 				{
 					AddPlayerShot();
 					_playerShot.Play();

@@ -178,7 +178,7 @@ The project already has a **Player** class located in the **Sprites** directory,
 	}
 	````
 
-	This chunk of code uses the **IsKeyDown** method from the **KeyboardState** class to determine if a keyboard key is held down.  We check if the Left arrow key is down (**Keys.Left**) and, if it is, we set the **Velocity** propery on the player to the negative **PlayerVelcocity** value.  If the Right arrow key is down (**Keys.Right**), we set the velocity to the positive **PlayerVelocity** value.  Finally, if neither is held down, we set the **Velocity** property to **Vector2.Zero**, which will not move the ship in either direction this frame.
+	This chunk of code uses the **IsKeyDown** method from the **KeyboardState** class to determine if a keyboard key is held down.  We check if the Left arrow key is down (**Keys.Left**) and, if it is, we set the **Velocity** property on the player to the negative **PlayerVelcocity** value.  If the Right arrow key is down (**Keys.Right**), we set the velocity to the positive **PlayerVelocity** value.  Finally, if neither is held down, we set the **Velocity** property to **Vector2.Zero**, which will not move the ship in either direction this frame.
 
 1. Now, run the game again.  You should now be able to move the ship left and right with the arrow keys!
 
@@ -267,7 +267,7 @@ MonoGame is an extremely flexible framework that allows you to write a game in a
 
 - Processing and Loading Content
 - Drawing Textures
-- Playing Sound and Music.
+- Playing Sound and Music
 - Drawing Text
 
 Check out the much longer **README.md** document in the Complete directory in this repo to see how this game was built from absolute scratch, with a bit more context on proper game architecture.

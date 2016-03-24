@@ -108,6 +108,8 @@ namespace AlienAttackUniversal
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Update(GameTime gameTime)
 		{
+			bool left = false, right = false, fire = false;
+			
 			//
 			// TODO: Play background music
 			//
@@ -115,15 +117,19 @@ namespace AlienAttackUniversal
 			//
 			// TODO: Read keyboard
 			//
+
+			//
+			// TODO: Read touch input
+			//
 			
 			if (_player != null)
 			{
 				//
-				// TODO: Handle player input for moving
+				// TODO: Handle moving
 				//
 				
 				//
-				// TODO: Handle player input for firing
+				// TODO: Handle firing
 				//
 
 				_player.Update(gameTime);

@@ -160,49 +160,98 @@ The project already has a **Player** class located in the **Sprites** directory,
 	_lastKeyboard = _keyboardState;
 	````
 
-1. Now, let's read the arrow keys to determine if we should move the ship left or right.  Add the following code inside the null check on **_player**:
+1. Now, let's read the arrow keys to determine if we should move the ship left or right.  Add the following code inside the **Update** method after the call to **Keyboard.GetState**:
 
-	(Code Snippet - _IntroMonoGame - ReadArrowKeys_)
+	````C#
+	if (_keyboardState.IsKeyDown(Keys.Left) && _player.Position.X > 0)
+		left = true;
+	else if (_keyboardState.IsKeyDown(Keys.Right) && _player.Position.X + _player.Width < ScreenWidth)
+		right = true;
+	````
+
+	This chunk of code uses the **IsKeyDown** method from the **KeyboardState** class to determine if a keyboard key is held down.  We check if the Left arrow key is down (**Keys.Left**) and, if it is, we set the local **left** boolean to true.  If the Right arrow key is down (**Keys.Right**), we set the local **right** boolean to true.  You will see why we did it this way, shortly...
+
+1. Next, let's add some code which handles these boolean values.  Inside the null reference check for **_player**, add the following code:
 
 	````C#
 	if (_player != null)
 	{
-		if (_keyboardState.IsKeyDown(Keys.Left) && _player.Position.X > 0)
+		if (left && _player.Position.X > 0)
 			_player.Velocity = -PlayerVelocity;
-		else if (_keyboardState.IsKeyDown(Keys.Right) && _player.Position.X + _player.Width < ScreenWidth)
+		else if (right && _player.Position.X + _player.Width < ScreenWidth)
 			_player.Velocity = PlayerVelocity;
 		else
 			_player.Velocity = Vector2.Zero;
-			
+
 		_player.Update(gameTime);
 	}
 	````
-
-	This chunk of code uses the **IsKeyDown** method from the **KeyboardState** class to determine if a keyboard key is held down.  We check if the Left arrow key is down (**Keys.Left**) and, if it is, we set the **Velocity** property on the player to the negative **PlayerVelcocity** value.  If the Right arrow key is down (**Keys.Right**), we set the velocity to the positive **PlayerVelocity** value.  Finally, if neither is held down, we set the **Velocity** property to **Vector2.Zero**, which will not move the ship in either direction this frame.
-
-1. Now, run the game again.  You should now be able to move the ship left and right with the arrow keys!
+	This code checks to see if either **left** or **right** are set to true, and if so, the **Velocity** property on the **_player** object is set appropriately (negative or positive/left or right).  If neither is set to true, the **Velocity** property is set to **Vector2.Zero**, which won't move the ship in either direction. 
+  
+1. Now, run the game again.  You should now be able to move the ship left and right with the arrow keys!    
 
 <a name="Ex1Task5"></a>
 #### Task 5 - Adding Player Firing ####
 
 Our next task is to get our ship to shoot.  
 
-1. Back in our **Update** method, just below where we added the last few lines of code to move the ship, let's add some code to check the state of the space bar, and fire a shot when it's pressed:
+1. Back in our **Update** method, just below the keyboard checks for the arrow keys, let's add some code to check the state of the space bar, and fire a shot when it's pressed:
 
 	````C#
-	if((_keyboardState.IsKeyDown(Keys.Space) && !_lastKeyboard.IsKeyDown(Keys.Space) &&
-			gameTime.TotalGameTime.TotalMilliseconds - _lastShotTime > ShotTime))
+	if((_keyboardState.IsKeyDown(Keys.Space) && !_lastKeyboard.IsKeyDown(Keys.Space)))
+		fire = true;
+	````
+	This code will again use the **IsKeyDown** method to check whether the space bar is pressed (**Keys.Space**), *since the last frame*, and sets the **fire** boolean appropriately.
+	
+1. Now, we need to handle the case when **fire** is true.  Back in the spot where we added the code to check for **left** and **right**, we can add a check for **fire** as shown:
+
+	````C#
+	if(fire && gameTime.TotalGameTime.TotalMilliseconds - _lastShotTime > ShotTime)
 	{
 		AddPlayerShot();
 		_lastShotTime = gameTime.TotalGameTime.TotalMilliseconds;
 	}
 	````
-This code will again use the **IsKeyDown** method to check whether the space bar is pressed (**Keys.Space**), but it also checked to make sure that both a) it wasn't pressed down on the last frame, and b) it has been more than **ShotTime** since the last time a shot was fired.  This ensures the player can't just hold the space bar down and fire shots continuously.  If those conditions are met, we call the **AddPlayerShot** method, and then save off the current time in the **_lastShotTime** member for comparison on subsequent frames.
+	
+This checks that **fire** is true and whether it has been more than **ShotTime** since the last time a shot was fired.  This ensures the player can't just hold the space bar down and fire shots continuously.  If those conditions are met, we call the **AddPlayerShot** method, and then save off the current time in the **_lastShotTime** member for comparison on subsequent frames.
 
 1. At this point, you can run the game again and you will be able to fire shots from the player ship and destroy the aliens.  See the **HandleCollisions** and **UpdatePlayerShots** methods for more information on how the game does collision detection and moves the shots up the screen.
 
 <a name="Ex1Task6"></a>
-#### Task 6 - Adding Shot Sound Effect ####
+#### Task 5 - Adding Touch Input ####
+
+Our game now has keyboard support, but it would be nice to add touch input support for devices with a touch screen (tablets, phones, laptops, etc.).  Let's add that now.
+
+1. Navigate to the **Initialize** method and add the following line of code before the call to **base.Initialize**:
+
+	````C#
+	TouchPanel.EnabledGestures = GestureType.Tap | GestureType.HorizontalDrag;
+	```` 
+This tells MonoGame to listen for Tap and Horizontal Drag gestures on the screen, while ignoring all others.
+
+1. Next, we need to handle the gestures.  This is done back in our **Update** method.  Below the code that reads the space bar with **IsKeyDown**, add the following:
+
+	````C#
+	while(TouchPanel.IsGestureAvailable)
+	{
+		GestureSample gs = TouchPanel.ReadGesture();
+		if(gs.GestureType == GestureType.HorizontalDrag)
+		{
+			if(gs.Delta.X < 0)
+				left = true;
+			else if(gs.Delta.X > 0)
+				right = true;
+		}
+		if(gs.GestureType == GestureType.Tap)
+			fire = true;
+	}
+	````
+Hopefully it is now clear why we setup the left/right/fire boolean variables.  This chunk of code does several things.  First, it loops while **TouchPanel.IsGestureAvailable** is true.  Gestures are actually stored in a queue to be parsed and handled by your code.  We get the next gesture in the list by calling **TouchPanel.ReadGesture**.  This returns a **GestureSample** object, which we use to figure out what gesture the user performed.  If it's a **HorizontalDrag** gesture, we set those same **left** and **right** variables to true, accordingly.  If it's a **Tap** gesture, we set the **fire** boolean.
+
+1. Run the game again and drag your finger horizontally or tap to move or fire.
+
+<a name="Ex1Task7"></a>
+#### Task 7 - Adding Shot Sound Effect ####
 
 Now that we can fire shots up the screen, it would be nice if there was a sound effect to accompany the action.  First, we need to load the proper effect using the Content object, just like we did with the player ship graphic.
 
@@ -220,8 +269,8 @@ Now that we can fire shots up the screen, it would be nice if there was a sound 
 	 ````
 That's it!  Now the game will fire shots and play the sound effect accordingly.
 
-<a name="Ex1Task7"></a>
-#### Task 7 - Drawing the Score ####
+<a name="Ex1Task8"></a>
+#### Task 8 - Drawing the Score ####
 
 Throughout the game, we have been keeping score based on the player destroying the enemy ships.  For every ship destroyed, the player earns 100 points, which is stored in the **_score** member variable.  Let's draw this to the screen.
 
@@ -237,8 +286,8 @@ This code uses a **SpriteFont** to draw text to the screen.  A **SpriteFont** al
 
 	In the example above, the first line of code uses the **MeasureString** method to determine the width and height of the rectangle that would be necessary to draw the string passed in.  The second line of code calls **DrawString** to actually draw the text to the screen, using the previously returned size to place it centered on the screen.  
 
-<a name="Ex1Task8"></a>
-#### Task 8 - Playing Some Music ####
+<a name="Ex1Task9"></a>
+#### Task 9 - Playing Some Music ####
 
 The game is completely playable at this stage, but having some background music might make the game a bit more interesting.  Let's add some.
 

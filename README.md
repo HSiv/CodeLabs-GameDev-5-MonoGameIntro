@@ -237,6 +237,29 @@ This code uses a **SpriteFont** to draw text to the screen.  A **SpriteFont** al
 
 	In the example above, the first line of code uses the **MeasureString** method to determine the width and height of the rectangle that would be necessary to draw the string passed in.  The second line of code calls **DrawString** to actually draw the text to the screen, using the previously returned size to place it centered on the screen.  
 
+<a name="Ex1Task8"></a>
+#### Task 8 - Playing Some Music ####
+
+The game is completely playable at this stage, but having some background music might make the game a bit more interesting.  Let's add some.
+
+1. In the **LoadContent** method, load the content named **sfx\\theme** as a **Song** object.  **Song** objects are not loaded completely into memory.  Instead, they can be streamed from disk, saving memory.  Typically, this is used with larger sound files, such as background or theme music:
+
+	````C#
+	_theme = Content.Load<Song>("sfx\\theme");
+	````
+	
+1. At the very top of the **Update** method, add the code to start the music playing if it isn't already.  This uses the **MediaPlayer** object, which is used to play sounds loaded as type **Song**.
+
+	````C#
+	if(MediaPlayer.State == MediaState.Stopped)
+	{
+		MediaPlayer.IsRepeating = true;
+		MediaPlayer.Play(_theme);
+	}
+	````
+
+It's as simple as that.  Go ahead and run the game again and enjoy the new tune!
+
 <a name="Summary"></a>
 ## Summary ##
 

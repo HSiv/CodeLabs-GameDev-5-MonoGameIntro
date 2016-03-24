@@ -82,9 +82,9 @@ namespace AlienAttackUniversal
 		{
 			_bgScreen = Content.Load<Texture2D>("gfx\\bgScreen");
 			_font = Content.Load<SpriteFont>("font");
-			_theme = Content.Load<Song>("sfx\\theme");
 			_explosion = Content.Load<SoundEffect>("sfx\\explosion");
 			_playerShot = Content.Load<SoundEffect>("sfx\\playerShot");
+			_theme = Content.Load<Song>("sfx\\theme");
 		}
 
 		/// <summary>

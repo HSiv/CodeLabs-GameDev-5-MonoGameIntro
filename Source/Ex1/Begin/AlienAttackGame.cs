@@ -82,11 +82,14 @@ namespace AlienAttackUniversal
 		{
 			_bgScreen = Content.Load<Texture2D>("gfx\\bgScreen");
 			_font = Content.Load<SpriteFont>("font");
-			_theme = Content.Load<Song>("sfx\\theme");
 			_explosion = Content.Load<SoundEffect>("sfx\\explosion");
 
 			//
 			// TODO: Load playerShot sound effect
+			//
+			
+			//
+			// TODO: Load background music
 			//
 		}
 
@@ -105,12 +108,10 @@ namespace AlienAttackUniversal
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Update(GameTime gameTime)
 		{
-			if(MediaPlayer.State == MediaState.Stopped)
-			{
-				MediaPlayer.IsRepeating = true;
-				MediaPlayer.Play(_theme);
-			}
-
+			//
+			// TODO: Play background music
+			//
+			
 			//
 			// TODO: Read keyboard
 			//

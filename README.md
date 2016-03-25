@@ -212,7 +212,6 @@ Our next task is to get our ship to shoot.
 		_lastShotTime = gameTime.TotalGameTime.TotalMilliseconds;
 	}
 	````
-	
 This checks that **fire** is true and whether it has been more than **ShotTime** since the last time a shot was fired.  This ensures the player can't just hold the space bar down and fire shots continuously.  If those conditions are met, we call the **AddPlayerShot** method, and then save off the current time in the **_lastShotTime** member for comparison on subsequent frames.
 
 1. At this point, you can run the game again and you will be able to fire shots from the player ship and destroy the aliens.  See the **HandleCollisions** and **UpdatePlayerShots** methods for more information on how the game does collision detection and moves the shots up the screen.
@@ -248,7 +247,7 @@ This tells MonoGame to listen for Tap and Horizontal Drag gestures on the screen
 	````
 Hopefully it is now clear why we setup the left/right/fire boolean variables.  This chunk of code does several things.  First, it loops while **TouchPanel.IsGestureAvailable** is true.  Gestures are actually stored in a queue to be parsed and handled by your code.  We get the next gesture in the list by calling **TouchPanel.ReadGesture**.  This returns a **GestureSample** object, which we use to figure out what gesture the user performed.  If it's a **HorizontalDrag** gesture, we set those same **left** and **right** variables to true, accordingly.  If it's a **Tap** gesture, we set the **fire** boolean.
 
-1. Run the game again and drag your finger horizontally or tap to move or fire.
+1. Run the game again and drag your finger horizontally or tap to move or fire.  *Note that this won't work using a mouse as the **TouchPanel** object ONLY responds to actual touch inputs.*
 
 <a name="Ex1Task7"></a>
 #### Task 7 - Adding Shot Sound Effect ####

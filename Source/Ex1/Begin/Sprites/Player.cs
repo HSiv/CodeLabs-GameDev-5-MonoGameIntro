@@ -9,6 +9,7 @@ namespace AlienAttackUniversal.Sprites
 		{
 			//
 			// TODO: Load the player sprite
+			//
 		}
 
 		public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)

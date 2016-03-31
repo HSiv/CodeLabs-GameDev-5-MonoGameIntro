@@ -129,9 +129,12 @@ namespace AlienAttackUniversal
 			
 			if (_player != null)
 			{
-				//
-				// TODO: Handle moving
-				//
+				if(left && _player.Position.X > 0)
+					_player.Velocity = -PlayerVelocity;
+				else if(right && _player.Position.X + _player.Width < ScreenWidth)
+					_player.Velocity = PlayerVelocity;
+				else
+					_player.Velocity = Vector2.Zero;
 				
 				//
 				// TODO: Handle firing

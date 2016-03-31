@@ -136,9 +136,12 @@ namespace AlienAttackUniversal
 				else
 					_player.Velocity = Vector2.Zero;
 				
-				//
-				// TODO: Handle firing
-				//
+
+				if(fire && gameTime.TotalGameTime.TotalMilliseconds - _lastShotTime > ShotTime)
+				{
+					AddPlayerShot();
+					_lastShotTime = gameTime.TotalGameTime.TotalMilliseconds;
+				}
 
 				_player.Update(gameTime);
 			}
